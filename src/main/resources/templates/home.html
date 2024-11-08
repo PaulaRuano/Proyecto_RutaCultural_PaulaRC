@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+	<!-- Incluir la barra de navegación -->
+	 <div th:insert="fragmentos/nav :: nav"></div>
+	 <main>
+	     <p>Esto es Home.</p>
+	 </main>
+	 <script th:src="@{/js/nav.js}"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "rutas": [
+    {
+      "id": 1,
+      "nombre": "Ruta Museos Valladilid",
+      "descripcion": "Recorrido por algunos de los museos más importantes del centro de Valladolid."      
+    },
+    {
+      "id": 2,
+      "nombre": "",
+      "descripcion": ""      
+    }
+  ]
+}
