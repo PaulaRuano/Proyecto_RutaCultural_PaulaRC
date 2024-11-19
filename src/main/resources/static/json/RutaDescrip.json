@@ -3,7 +3,8 @@
     {
       "id": 1,
       "nombre": "Ruta Museos Valladilid",
-      "descripcion": "Recorrido por algunos de los museos más importantes del centro de Valladolid."      
+      "descripcionBreve": "Recorrido por algunos de los museos más importantes del centro de Valladolid.",
+	  "descripcion": ""      
     },
     {
       "id": 2,

@@ -1,35 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Navbar</title>
-    <link rel="stylesheet" th:href="@{/css/estilos.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-logo">
-            <span class="material-symbols-outlined">place</span>
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="/img/LogoRutaCulturalTransparente.png" alt="Logo Ruta Cultural" class="navbar-logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/home">Inicio</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Mis Rutas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Crear Rutas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Favoritos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="perfilUsuario">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/registrar">Registrarse</a>
+                </li>
+            </ul>
         </div>
-        <div class="nav-toggle">
-            <span class="material-symbols-outlined">menu</span>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#">Mis rutas</a></li>
-            <li><a href="/rutasPreder">Rutas</a></li>
-            <li><a href="#">Crear Ruta</a></li>
-            <li><a href="#">Favoritos</a></li>
-            <li><a href="#">
-                <span class="material-symbols-outlined">person</span>
-            </a></li>
-        </ul>
-    </nav>
-
-    <!-- Main content -->
-    <div class="content">
-        <h1>Página principal</h1>
-    </div>   
-</body>
-</html>
+    </div>
+</nav>
