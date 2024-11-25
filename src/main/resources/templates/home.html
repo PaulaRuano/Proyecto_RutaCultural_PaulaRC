@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Inicio</title>
@@ -14,7 +14,7 @@
 </head>
 <body>
 	<!-- Incluir la barra de navegación -->
-	 <div th:insert="fragmentos/nav :: nav"></div>
+	<div th:insert="~{fragmentos/nav :: nav}"></div>
 	 <main>
 	 <div class="homeHero">
 		<div class="px-4 py-5 my-5 text-center">		  
@@ -23,13 +23,17 @@
 		  </div>
 	 </div>	
 	 <div class="pcontainer my-5">
-	 	         <div class="card shadow-lg border-0">
+	 	         <div class="card border-0">
 	 	             <div class="pExplora card-body">
 	 	                 <h2 class="tpExplora card-title text-center mb-4">Explora Castilla y León a tu Ritmo</h2>
 	 	                 <p class="card-text text-justify">
 	 	                    Descubre los tesoros culturales de Castilla y León de una forma única y personalizada. Diseña tus propias rutas y 
 							disfruta de explicaciones en cada lugar sin necesidad de buscar guías. ¡Todo en un solo clic!
-	 	                 </p>
+						</p>
+						<p class="card-text text-justify">
+							Regístrate ahora y descubre la magia de Castilla y León de una forma nunca antes vista. Diseña tus rutas, escucha las historias 
+							y vive una experiencia única. ¡Tu próxima aventura cultural te espera!
+						</p>						
 	 	             </div>
 	 	         </div>
 	 	     </div>	
@@ -60,6 +64,59 @@
 	    </div>
 	  </div>
 	  </div>
+	  
+	  <div class="pcontainer my-5">
+	    <div class="card border-0">
+	      <div class="pExplora card-body text-center">
+	        <h2 class="tpExplora card-title text-center mb-4">Explora con Mapa</h2>
+	        <div class="image-container mb-3">
+	          <img src="/img/GoogleMapsLogo.png" alt="Logo google maps" class="img-fluid" style="width: 50%; max-width: 200px; height: auto;">
+	        </div>
+	        <p class="card-text text-justify">
+	          Visualiza tu recorrido cómodamente en un mapa gracias a Google Maps.
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+
+			 <div class="container my-5 ">
+			    <h1 class="text-center mb-4">¿Por Qué Elegirnos?</h1>
+			    <!-- Contenedor de las sub-secciones -->
+			    <div class="features-container">
+			      <!-- Sub-sección 1 -->
+			      <div class="feature-card">
+			        <div>
+			          <h3>Sin Guías, Sin Estrés</h3>
+			          <p>Libérate de buscar información o contratar guías si prefieres viajar a tu manera.</p>
+			        </div>
+			        <div class="image-container mt-4">
+			          <img src="/img/sub1.png" alt="Sin Guías, Sin Estrés">
+			        </div>
+			      </div>
+
+			      <!-- Sub-sección 2 -->
+			      <div class="feature-card">
+			        <div>
+			          <h3>Fácil y Rápido</h3>
+			          <p>Todo lo que necesitas para explorar Castilla y León está en la palma de tu mano.</p>
+			        </div>
+			        <div class="image-container mt-4">
+			          <img src="/img/sub2.png" alt="Fácil y Rápido">
+			        </div>
+			      </div>
+
+			      <!-- Sub-sección 3 -->
+			      <div class="feature-card">
+			        <div>
+			          <h3>Contenido Personalizado</h3>
+			          <p>Diseña tu experiencia de viaje según tus intereses y horarios.</p>
+			        </div>
+			        <div class="image-container mt-4">
+			          <img src="/img/sub3.png" alt="Contenido Personalizado">
+			        </div>
+			      </div>
+			    </div>
+			  </div>
 	 </main>
 	 <!-- Bootstrap JS -->
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

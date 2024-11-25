@@ -1,0 +1,21 @@
+<div class="modal fade" id="rutaUsuarioCreada" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="text-success"><i class="bi bi-check-circle"></i> Ruta creada correctamente</h3>
+                <p>Ahora puedes verla en "Mis Rutas".</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const modal = new bootstrap.Modal(document.getElementById('rutaCreadaModal'));
+        modal.show();
+        setTimeout(() => {
+            modal.hide();
+            window.location.href = '/crearRutaUsuario'; // Redirigir tras 3 segundos
+        }, 3000);
+    });
+</script>

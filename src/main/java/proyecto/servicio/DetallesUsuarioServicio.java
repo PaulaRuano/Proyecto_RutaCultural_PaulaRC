@@ -1,6 +1,7 @@
 package proyecto.servicio;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,5 +26,11 @@ public class DetallesUsuarioServicio implements UserDetailsService {
         UsuarioDTO usuario = usuarioDAO.findBycorreo(correo)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con correo: " + correo));
         return new UsuarioDetalles(usuario);
+    }
+    
+    public UsuarioDTO obtenerUsuarioActual() {
+        String correo = SecurityContextHolder.getContext().getAuthentication().getName();
+        return usuarioDAO.findBycorreo(correo)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
     }
 }

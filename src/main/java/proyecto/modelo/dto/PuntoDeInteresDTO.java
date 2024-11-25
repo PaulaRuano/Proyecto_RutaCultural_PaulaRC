@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor		  // Constructor vacío
 @AllArgsConstructor       // Constructor con todos los atributos
-@Table(name = "puntoDeInteres") //  Nombre de la tabla
+@Table(name = "punto_de_interes") //  Nombre de la tabla
 public class PuntoDeInteresDTO {
 	//Atributos
 	

@@ -10,7 +10,7 @@ body{
 }
 /*Navbar*/
 .custom-navbar {
-    background-color: rgb(240, 240, 240); /* Fondo blanco */
+    background-color: rgb(235, 235, 235); /* Fondo blanco */
     color: black; /* Fuente negra */
     border-radius: 8px; /* Bordes redondeados */
     margin: 15px; /* Espaciado exterior */
@@ -18,26 +18,24 @@ body{
     padding: 10px; /* Espaciado interno opcional */
 }
 
-/* Asegúrate de que los textos y enlaces sean negros */
 .custom-navbar a.navbar-brand {
     color: black;
     text-decoration: none;
 }
 
 .custom-navbar a.navbar-brand:hover {
-    color: #555555; /* Color al pasar el ratón */
+    color: #555555; 
 }
 .navbar-logo {
-    max-width: 100px; /* Tamaño máximo */
-    min-width: 80px; /* Tamaño mínimo */
-    width: 100%; /* Hace que sea adaptable dentro de los límites */
-    height: auto; /* Mantiene la proporción de la imagen */
-    transition: transform 0.3s ease; /* Agrega un efecto suave de escalado */
+    max-width: 100px; 
+    min-width: 80px; 
+    width: 100%;
+    height: auto; 
+    transition: transform 0.3s ease; 
 }
 
-/* Si deseas que crezca o disminuya al pasar el ratón */
 .navbar-logo:hover {
-    transform: scale(1.1); /* Incrementa el tamaño un 10% al pasar el ratón */
+    transform: scale(1.1); 
 }
 
 /*Página Principal - Inicio*/
@@ -53,6 +51,7 @@ body{
 	padding: 0;
 	justify-content: center; 
 	text-align: center;
+	margin-top: 2em;
 }
 
 @media (min-width: 718px) {
@@ -113,17 +112,7 @@ body{
 
 div.pcontainer{
 	padding: 0;
-	margin: 3.3em;
-	background-color: rgb(240, 240, 240);
-	border-radius: 0.5em;
-}
-.pcontainer > .card{
-	background-color: rgb(240, 240, 240);
-}
-
-.pExplora{
-	background-color: rgb(240, 240, 240);
-	margin:0em 0.5em 0em 0.5em;
+	margin: 3.3em 2em 3.3em 2em;
 }
 
 /*S1*/
@@ -150,6 +139,42 @@ div.pcontainer{
 	color: rgb(180, 180, 180);
 	background-color: black;
 }
+
+/*Seción ¿?*/
+.feature-card {
+      border: 1px solid rgb(117,40,100);
+      border-radius: 10px;
+      padding: 20px;
+      background: rgb(235, 235, 235);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .feature-card h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      font-size: 1rem;
+      color: #555;
+    }
+    .feature-card .image-container img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+    }
+    @media (min-width: 840px) {
+      .features-container {
+        display: flex;
+        gap: 20px;
+      }
+      .feature-card {
+        flex: 1;
+      }
+    }
 
 /*Login y Registrar*/
 .wrapper {
@@ -307,3 +332,164 @@ a:hover {
         font-size: 0.95rem
     }
 }
+
+/* Lista Rutas P */
+.route-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.route-image img {
+  width: 100%;
+  height: auto;
+}
+
+.route-details {
+  padding: 20px;
+  flex: 1; /* Asegura que el contenido tome el espacio disponible */
+}
+
+.route-data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.route-data .data-item {
+  flex: 1 1 45%; /* Ajusta al 45% del contenedor */
+  background: #f8f9fa;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-data .data-item strong {
+  display: block;
+  font-weight: bold;
+}
+
+@media (min-width: 1300px) {
+  .route-card {
+    flex-direction: row; /* Cambia a diseño horizontal */
+    align-items: stretch; /* Asegura que la imagen y el contenido tengan la misma altura */
+  }
+  .route-image {
+    flex: 1; /* La imagen ocupa la mitad del espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa; /* Opcional: añade un fondo para la imagen */
+  }
+  .route-image img {
+    width: 100%;
+    height: 100%; /* Hace que la imagen llene su contenedor */
+    object-fit: cover; /* Mantiene las proporciones sin deformar */
+  }
+  .route-details {
+    flex: 1; /* Asegura que el contenido ocupe el resto del espacio */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/*Lista pI*/
+.poi-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .poi-image {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .poi-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .poi-image .poi-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: #fff;
+      color: #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      font-size: 1.5rem;
+    }
+
+    .poi-details {
+      padding: 20px;
+    }
+
+    .poi-data {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .poi-data .data-item {
+      flex: 1 1 100%; /* Mobile-first: ocupa el 100% */
+      background: #f8f9fa;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-align: left;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 576px) {
+      .poi-data .data-item {
+        flex: 1 1 calc(50% - 10px); /* Dos columnas en pantallas más grandes */
+      }
+    }
+	.selected-points { min-height: 50px; }
+	   .placeholder-text { color: gray; font-style: italic; }
+	   .poi-card.selected { background-color: #e9fce9; border-color: #4caf50; }
+	   .poi-card.selected .poi-details { background-color: #e9fce9; 
+	}
+	   
+/* Mobile-first: ocupa el 100% */
+.timeline {
+          position: relative;
+          margin: 20px 0;
+      }
+      .timeline .point {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+      .timeline .point .circle {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          margin-right: 10px;
+      }
+      .timeline .point.active .circle {
+          background-color: rgb(117,40,100);
+      }
+      .timeline .point.completed .circle {
+          background-color: black;
+      }
+      .timeline .point.pending .circle {
+          background-color: gray;
+      }

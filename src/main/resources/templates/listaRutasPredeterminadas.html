@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rutas Predeterminadas</title>
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Unna:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<!-- Archivo CSS -->		
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">	
+</head>
+<body>
+	<!-- Incluir la barra de navegación -->
+	 <div th:insert="fragmentos/nav :: nav"></div>
+	 <!-- Contenido principal -->
+	  <main class="container my-5">
+	    <h1 class="text-center">Listado de Rutas Predeterminadas</h1>
+	    
+	    <!-- Iterar sobre las rutas -->
+		<div class="row mt-4">
+		  <div class="col-md-6" th:each="ruta : ${rutas}">
+		    <div class="card route-card mb-4">
+		      <div class="route-image">
+		        <img src="https://via.placeholder.com/800x600" class="card-img-top" alt="Imagen de la ruta">
+		      </div>
+		      <div class="route-details">
+		        <h5 class="card-title" th:text="${ruta.nombre}">Nombre de la Ruta</h5>
+		        <div class="route-data">
+		          <div class="data-item">
+		            <strong>Duración:</strong>
+		            <span th:text="${ruta.duracion}">4 horas</span>
+		          </div>
+		          <div class="data-item">
+		            <strong>Distancia:</strong>
+		            <span th:text="${ruta.distancia}">12 km</span>
+		          </div>
+		          <div class="data-item">
+		            <strong>Localidad:</strong>
+		            <span th:text="${ruta.municipio}">San Martín</span>
+		          </div>
+		        </div>
+				<form th:action="@{/guardarEnMisRutas}" method="POST" class="mt-3">
+				     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+				     <input type="hidden" name="rutaId" th:value="${ruta.id}"/>
+				     <button type="submit" class="btn btn-primary w-100">Guardar en Mis Rutas</button>
+				</form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	  </main>
+	  <div th:insert="~{fragmentos/footer :: footer}"></div>
+	 <!-- Bootstrap JS -->
+	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

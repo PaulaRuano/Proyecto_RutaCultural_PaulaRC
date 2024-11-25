@@ -18,35 +18,17 @@ import proyecto.servicio.UsuarioServicio;
 
 @Controller
 public class LoginControlador {
-    private final UsuarioServicio usuarioServicio;
+	private final UsuarioServicio usuarioServicio;
 
-    @Autowired
-    public LoginControlador(UsuarioServicio usuarioServicio) {
-        this.usuarioServicio = usuarioServicio;        
-    }
+	@Autowired
+	public LoginControlador(UsuarioServicio usuarioServicio) {
+		this.usuarioServicio = usuarioServicio;        
+	}
+
 
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model,
-                                         @RequestParam(value = "error", required = false) String error)
-                                       // HttpSession session) 
-                                         {
-        // Verificar si ya hay un usuario autenticado en SecurityContext
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-            // Obtener detalles del usuario autenticado
-            String correo = authentication.getName(); // Obtener correo del usuario autenticado
-            Optional<UsuarioDTO> usuarioOpt = usuarioServicio.buscarPorCorreo(correo);
-            
-
-            usuarioOpt.ifPresent(usuario -> 
-                System.out.println("Usuario autenticado: " + usuario.getUsuario())
-            );
-          
-               // UsuarioDTO usuarioLogueado = usuarioOpt.get();
-                //session.setAttribute("usuario", usuarioLogueado); // Guardar usuario en la sesión                             
-        }
-
+                                         @RequestParam(value = "error", required = false) String error) {
         if (!model.containsAttribute("usuarioDTO")) {
             model.addAttribute("usuarioDTO", new UsuarioDTO());
         }
@@ -55,25 +37,37 @@ public class LoginControlador {
             model.addAttribute("error", "Credenciales inválidas");
         }
 
-        return "login";
+        return "login"; // Mostrar el formulario de login
     }
 
-    @PostMapping("/iniciar_Sesion")
-    public String iniciarSesion(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
-        System.out.println("Inicio de sesión iniciado para correo: " + usuarioDTO.getCorreo());
+	@PostMapping("/iniciar_Sesion")
+	public String iniciarSesion(@ModelAttribute UsuarioDTO usuarioDTO, Model model, @RequestParam(value = "error", required = false) String error) {
+		  // Verificar si el usuario ya está autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Optional<UsuarioDTO> usuarioOpt = usuarioServicio.buscarPorCorreo(usuarioDTO.getCorreo());
-        if (usuarioOpt.isEmpty() || 
-            !usuarioServicio.verificarContrasenia(usuarioDTO.getCorreo(), usuarioDTO.getContrasenia())) {
-            System.out.println("Credenciales inválidas para correo: " + usuarioDTO.getCorreo());
-            model.addAttribute("error", "Credenciales inválidas");
-            return "login";
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+            // Verificar si el rol es ADMIN
+            if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+                // Redirigir al administrador
+                return "administradorVista";
+            } 
+            // Verificar si el rol es CLIENTE
+            else if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_CLIENTE"))) {
+                // Redirigir al cliente
+                return "home";
+            }
         }
 
-        UsuarioDTO usuarioLogueado = usuarioOpt.get();
-        session.setAttribute("usuario", usuarioLogueado);
-        System.out.println("Usuario almacenado en sesión: " + usuarioLogueado.getUsuario());
+        // Si no está autenticado, mostrar el formulario de login
+        if (!model.containsAttribute("usuarioDTO")) {
+            model.addAttribute("usuarioDTO", new UsuarioDTO());
+        }
 
-        return "redirect:/home";
-    }
+        // Mostrar mensaje de error si hay uno
+        if (error != null) {
+            model.addAttribute("error", "Credenciales inválidas");
+        }
+
+        return "login"; // Mostrar la página de login
+	}
 }

@@ -15,20 +15,23 @@ import org.springframework.web.client.RestTemplate;
 public class SeguridadConfiguracion {
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, AutenticacionExitosa autenticacionExitosa) throws Exception {
 		http
 		.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/login", "/home", "registrar","/registro", "/api/puntos-de-interes/**", "/rutasPreder", 
-						"/api/ruta-predeterminada","/css/**", "/json/**","/js/**", "/img/**").permitAll() // Permite acceso sin autenticación
-				.requestMatchers("/perfilUsuario/**", "/cambiarContrasenia", "cambiarCorreo","cambiarNombre").authenticated() // Solo usuarios autenticados
-				.anyRequest().hasRole("CLIENTE")
+				.requestMatchers("/login", "/home", "registrar", "/registro", "/api/**", "/listaRutasPredeterminadas", 
+						"/rutasPreder", "/api/ruta-predeterminada", "/crearRutaUsuario/**","/css/**", "/json/**", "/js/**", "/img/**")
+				.permitAll() // Permite acceso sin autenticación
+				.requestMatchers("/administradorVista", "/crearRutaPredeterminada").hasRole("ADMIN") // Acceso solo para administradores
+				.requestMatchers("/confirmarRutaUsuario", "/guardarRutaUsuario", "/listaMisRutas", "/guardarEnMisRutas","/hacerRuta","/perfilUsuario/**", "/cambiarContrasenia", "/cambiarCorreo", "/cambiarNombre")
+				.authenticated() // Solo usuarios autenticados
+				.anyRequest().hasRole("CLIENTE") // Todas las demás solicitudes requieren rol CLIENTE
 				)
 		.formLogin(form -> form
 				.loginPage("/login") // Ruta de tu formulario de inicio de sesión personalizado
 				.loginProcessingUrl("/iniciar_Sesion")
 				.usernameParameter("correo") // Cambia el nombre del parámetro para el usuario
 				.passwordParameter("contrasenia") // Cambia el nombre del parámetro para la contraseña
-				.defaultSuccessUrl("/home", true) // Redirige a /home después de un inicio de sesión exitoso
+				 .successHandler(autenticacionExitosa)  // Redirige a /home después de un inicio de sesión exitoso
 				.permitAll()
 				)
 		.logout(logout -> logout.permitAll()); // Permitir el cierre de sesión para todos
@@ -40,9 +43,9 @@ public class SeguridadConfiguracion {
 	public PasswordEncoder encriptarContrasenia() {
 		return new BCryptPasswordEncoder();
 	}
-	
-	  @Bean
-	    public RestTemplate restTemplate() {
-	        return new RestTemplate();
-	    }
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }
