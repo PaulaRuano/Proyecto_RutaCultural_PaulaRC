@@ -33,22 +33,27 @@ public class HacerRutaControlador {
 
     @GetMapping("/hacerRuta")
     public String hacerRuta(@RequestParam Integer id, @RequestParam String tipo, Model model) {
+        List<PuntoDeInteresDTO> puntos;
+
         if ("U".equals(tipo)) {
-            // Rutas de usuario
             RutaUsuarioDTO rutaUsuario = rutaUsuarioServicio.obtenerRutaPorId(id)
                     .orElseThrow(() -> new IllegalArgumentException("Ruta de usuario no encontrada."));
-            
-            cargarVistaHacerRutaUsuario(model, rutaUsuario);
+            puntos = puntoDeInteresServicio.obtenerPuntosPorIdsDesdeBBDD(
+                    rutaUsuarioServicio.obtenerIdsPuntosDeRuta(rutaUsuario.getId())
+            );
+            model.addAttribute("ruta", rutaUsuario);
         } else if ("P".equals(tipo)) {
-            // Rutas predeterminadas
             RutaPredeterminadaDTO rutaPredeterminada = rutaPredeterminadaServicio.obtenerRutaPorId(id)
                     .orElseThrow(() -> new IllegalArgumentException("Ruta predeterminada no encontrada."));
-            
-            cargarVistaHacerRutaPredeterminada(model, rutaPredeterminada);
+            puntos = puntoDeInteresServicio.obtenerPuntosPorIdsDesdeBBDD(
+                    rutaPredeterminadaServicio.obtenerIdsPuntosDeRuta(rutaPredeterminada.getId())
+            );
+            model.addAttribute("ruta", rutaPredeterminada);
         } else {
             throw new IllegalArgumentException("Tipo de ruta no válido.");
         }
 
+        model.addAttribute("puntos", puntos);
         return "hacerRuta";
     }
 

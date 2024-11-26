@@ -1,0 +1,12 @@
+[
+  {
+    "id":1261041542236,
+    "nombre": "Museo Oriental",
+    "descripcion": "El Museo Oriental de Valladolid tiene su sede en el convento de los Agustinos Filipinos en el Paseo de Filipinos, Valladolid. Fue inaugurado en 1980 y cuenta con 18 salas dedicadas a China, Filipinas y Japón."
+  },
+  {
+    "id": 1261041538081,
+    "nombre": "Museo Nacional de Escultura. Colegio de San Gregorio",
+    "descripcion": "El Museo Nacional de Escultura está situado en la calle Cadenas de San Gregorio, Valladolid. El museo se divide en tres sedes: El Colegio de San Gregorio, El Palacio de Villena y La Casa del Sol y la iglesia de San Benito el Viejo"
+  }
+]

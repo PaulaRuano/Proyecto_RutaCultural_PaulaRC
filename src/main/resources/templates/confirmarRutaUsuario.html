@@ -63,7 +63,7 @@
     </form>
 </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLMpyfvOmoEXcXj0TS7MwYk39OAz2c530&libraries=places&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLMpyfvOmoEXcXj0TS7MwYk39OAz2c530&libraries=directions,places&callback=initMap" async defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script>
@@ -115,7 +115,7 @@
             origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
             destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
             waypoints,
-            travelMode: google.maps.TravelMode.DRIVING
+            travelMode: google.maps.TravelMode.WALKING
         };
 
         directionsService.route(request, (result, status) => {
