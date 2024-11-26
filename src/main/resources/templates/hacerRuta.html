@@ -46,108 +46,153 @@
                 </button>
             </div>
             <p class="mt-3" id="descripcionPunto">Descripción del punto de interés.</p>
-            <div class="text-center mt-4">
-                <button class="btn btn-success" id="btnSiguientePunto">Ir al Siguiente Punto</button>
-            </div>
+			<div class="text-center mt-4">
+			    <button class="btn btn-success" id="btnSiguientePunto">Ir al Siguiente Punto</button>
+			    <button class="btn btn-danger" id="btnTerminarRuta" style="display: none;">Terminar Ruta</button>
+			</div>
         </div>
     </div>
-    <script>
-        let map;
-        let directionsService;
-        let directionsRenderer;
-        let puntos = /*[[${puntos}]]*/ [];
-        let descripciones = [];
-        let puntoActualIndex = 0;
+	<script>
+	    let map;
+	    let directionsService;
+	    let directionsRenderer;
+	    let puntos = /*[[${puntos}]]*/ []; // Cargados desde el backend
+	    let descripciones = []; // Cargadas desde el JSON
+	    let puntoActualIndex = 0; // Índice del punto actual
+	    let audioActual; // Controlador del audio actual
 
-        // Función global para Google Maps
-        window.initMap = function () {
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer();
+	    // Función global para Google Maps
+	    window.initMap = function () {
+	        directionsService = new google.maps.DirectionsService();
+	        directionsRenderer = new google.maps.DirectionsRenderer();
 
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 40.416775, lng: -3.703790 },
-                zoom: 10
-            });
+	        map = new google.maps.Map(document.getElementById("map"), {
+	            center: { lat: 40.416775, lng: -3.703790 },
+	            zoom: 10
+	        });
 
-            directionsRenderer.setMap(map);
+	        directionsRenderer.setMap(map);
 
-            puntos = Array.from(document.querySelectorAll(".timeline .point")).map(point => ({
-                id: parseInt(point.getAttribute("data-id")),
-                nombreOrganismo: point.querySelector("span").textContent.trim(),
-                lat: parseFloat(point.getAttribute("data-lat")),
-                lng: parseFloat(point.getAttribute("data-lng"))
-            }));
+	        puntos = Array.from(document.querySelectorAll(".timeline .point")).map(point => ({
+	            id: parseInt(point.getAttribute("data-id")),
+	            nombreOrganismo: point.querySelector("span").textContent.trim(),
+	            lat: parseFloat(point.getAttribute("data-lat")),
+	            lng: parseFloat(point.getAttribute("data-lng"))
+	        }));
 
-            calculateRoute(puntos);
-        };
+	        console.log("Puntos cargados:", puntos);
+	        calculateRoute(puntos);
 
-        function calculateRoute(puntos) {
-            if (puntos.length < 2) return;
+	        // Cargar descripciones desde el JSON
+	        cargarDescripcionesJSON();
+	    };
 
-            const waypoints = puntos.slice(1, -1).map(point => ({
-                location: new google.maps.LatLng(point.lat, point.lng),
-                stopover: true
-            }));
+	    function calculateRoute(puntos) {
+	        if (puntos.length < 2) return;
 
-            const request = {
-                origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
-                destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
-                waypoints,
-                travelMode: google.maps.TravelMode.WALKING
-            };
+	        const waypoints = puntos.slice(1, -1).map(point => ({
+	            location: new google.maps.LatLng(point.lat, point.lng),
+	            stopover: true
+	        }));
 
-            directionsService.route(request, (result, status) => {
-                if (status === google.maps.DirectionsStatus.OK) {
-                    directionsRenderer.setDirections(result);
-                } else {
-                    console.error("Error al calcular la ruta:", status);
-                }
-            });
-        }
+	        const request = {
+	            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
+	            destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
+	            waypoints,
+	            travelMode: google.maps.TravelMode.WALKING // A pie
+	        };
 
-        async function cargarDescripcionesJSON() {
-            try {
-                const response = await fetch('/json/PunIntDescrip.json');
-                if (!response.ok) {
-                    console.error('No se pudo cargar el JSON:', response.status);
-                    return;
-                }
-                descripciones = await response.json();
-                console.log('Descripciones cargadas:', descripciones);
+	        directionsService.route(request, (result, status) => {
+	            if (status === google.maps.DirectionsStatus.OK) {
+	                directionsRenderer.setDirections(result);
+	            } else {
+	                console.error("Error al calcular la ruta:", status);
+	            }
+	        });
+	    }
 
-                mostrarPuntoActual(puntoActualIndex);
-            } catch (error) {
-                console.error('Error cargando descripciones:', error);
-            }
-        }
+	    async function cargarDescripcionesJSON() {
+	        try {
+	            const response = await fetch('/json/PunIntDescrip.json');
+	            if (!response.ok) {
+	                console.error("No se pudo cargar el JSON:", response.status);
+	                return;
+	            }
+	            descripciones = await response.json();
+	            console.log("Descripciones cargadas:", descripciones);
 
-        function mostrarPuntoActual(index) {
-            const punto = puntos[index];
-            if (!punto) return;
+	            mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto tras cargar las descripciones
+	        } catch (error) {
+	            console.error("Error cargando descripciones:", error);
+	        }
+	    }
 
-            const descripcion = descripciones.find(desc => desc.id === punto.id)?.descripcion || "Descripción del punto de interés";
-            document.getElementById("nombrePunto").textContent = punto.nombreOrganismo;
-            document.getElementById("imagenPunto").src = `/img/puntosInteres/${punto.id}.jpg`;
-            document.getElementById("imagenPunto").onerror = () => {
-                document.getElementById("imagenPunto").src = '/img/ImgComunPI.png';
-            };
-            document.getElementById("descripcionPunto").textContent = descripcion;
+		function mostrarPuntoActual(index) {
+		    const punto = puntos[index];
+		    if (!punto) {
+		        console.error(`Punto no encontrado en el índice ${index}`);
+		        return;
+		    }
 
-            const audio = new Audio(`/audio/${punto.id}.mp3`);
-            document.getElementById("btnReproducirAudio").onclick = () => audio.play();
-        }
+		    console.log(`Mostrando punto actual:`, punto);
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("btnSiguientePunto").onclick = () => {
-                if (puntoActualIndex < puntos.length - 1) {
-                    puntoActualIndex++;
-                    mostrarPuntoActual(puntoActualIndex);
-                }
-            };
+		    // Buscar la descripción del punto en el JSON
+		    const descripcion = descripciones.find(desc => desc.id === punto.id)?.descripcion || "Descripción del punto de interés";
 
-            cargarDescripcionesJSON();
-        });
-    </script>
+		    // Actualizar contenido en la vista
+		    document.getElementById("nombrePunto").textContent = punto.nombreOrganismo;
+		    document.getElementById("imagenPunto").src = `/img/puntosInteres/${punto.id}.jpg`;
+		    document.getElementById("imagenPunto").onerror = () => {
+		        document.getElementById("imagenPunto").src = "/img/ImgComunPI.png";
+		    };
+		    document.getElementById("descripcionPunto").textContent = descripcion;
+
+		    // Configurar y reproducir audio
+		    if (audioActual) {
+		        audioActual.pause(); // Pausar cualquier audio que esté en reproducción
+		    }
+		    audioActual = new Audio(`/audio/${punto.id}.mp3`);
+		    audioActual.onerror = () => {
+		        console.warn(`Audio para el punto ${punto.id} no encontrado. Cargando audio genérico.`);
+		        audioActual.src = "/audio/Comun.mp3";
+		    };
+
+		    document.getElementById("btnReproducirAudio").onclick = () => {
+		        if (audioActual) {
+		            audioActual.currentTime = 0; // Reiniciar el audio al inicio
+		            audioActual.play();
+		        }
+		    };
+
+		    // Configuración del botón de navegación
+		    const btnSiguientePunto = document.getElementById("btnSiguientePunto");
+		    const btnTerminarRuta = document.getElementById("btnTerminarRuta");
+
+		    if (index === puntos.length - 1) {
+		        // Último punto: Ocultar "Ir al Siguiente Punto", mostrar "Terminar ruta"
+		        btnSiguientePunto.style.display = "none";
+		        btnTerminarRuta.style.display = "block";
+		    } else {
+		        // No es el último punto: Mostrar "Ir al Siguiente Punto", ocultar "Terminar ruta"
+		        btnSiguientePunto.style.display = "block";
+		        btnTerminarRuta.style.display = "none";
+		    }
+		}
+
+		document.addEventListener("DOMContentLoaded", () => {
+		    document.getElementById("btnSiguientePunto").onclick = () => {
+		        if (puntoActualIndex < puntos.length - 1) {
+		            puntoActualIndex++;
+		            mostrarPuntoActual(puntoActualIndex);
+		        }
+		    };
+
+		    // Configuración inicial
+		    cargarDescripcionesJSON();
+		    mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto al cargar la página
+		});
+	</script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLMpyfvOmoEXcXj0TS7MwYk39OAz2c530&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>
