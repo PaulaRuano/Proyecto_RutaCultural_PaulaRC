@@ -33,7 +33,7 @@ import lombok.Setter;
 @RequiredArgsConstructor  // Constructor sin id
 @Table(name = "ruta")    //  Nombre de la tabla
 @Inheritance(strategy = InheritanceType.JOINED)
-abstract class RutaDTO {
+public abstract class RutaDTO {
 	//Atributos
 
 	/** 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import proyecto.modelo.dto.RutaUsuarioDTO;
 import proyecto.modelo.dto.UsuarioDTO;
-// @Repository
+ @Repository
 public interface RutaUsuarioDAO extends JpaRepository<RutaUsuarioDTO, Integer>{
 	 List<RutaUsuarioDTO> findByUsuario(UsuarioDTO usuario);
 }

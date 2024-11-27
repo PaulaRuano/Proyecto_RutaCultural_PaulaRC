@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Hacer Ruta</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +50,14 @@
             <p class="mt-3" id="descripcionPunto">Descripción del punto de interés.</p>
 			<div class="text-center mt-4">
 			    <button class="btn btn-success" id="btnSiguientePunto">Ir al Siguiente Punto</button>
-			    <button class="btn btn-danger" id="btnTerminarRuta" style="display: none;">Terminar Ruta</button>
+				<form id="guardarRutaForm" action="/rutasRealizadas/guardar" method="POST" style="display: none;">
+				    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+				   <input type="hidden" name="rutaId" id="rutaIdInput" th:value="${ruta.id}" />
+				    <input type="hidden" name="usuarioId" th:value="${usuario.id}" />
+				    <input type="hidden" name="fecha" id="fechaInput" />
+				    <input type="hidden" name="tiempo" id="tiempoInput" />
+				</form>
+				<button class="btn btn-danger" id="btnTerminarRuta" style="display: none;">Terminar Ruta</button>
 			</div>
         </div>
     </div>
@@ -60,6 +69,7 @@
 	    let descripciones = []; // Cargadas desde el JSON
 	    let puntoActualIndex = 0; // Índice del punto actual
 	    let audioActual; // Controlador del audio actual
+	    let tiempoInicio; // Tiempo de inicio de la ruta
 
 	    // Función global para Google Maps
 	    window.initMap = function () {
@@ -68,20 +78,23 @@
 
 	        map = new google.maps.Map(document.getElementById("map"), {
 	            center: { lat: 40.416775, lng: -3.703790 },
-	            zoom: 10
+	            zoom: 10,
 	        });
 
 	        directionsRenderer.setMap(map);
 
-	        puntos = Array.from(document.querySelectorAll(".timeline .point")).map(point => ({
+	        puntos = Array.from(document.querySelectorAll(".timeline .point")).map((point) => ({
 	            id: parseInt(point.getAttribute("data-id")),
 	            nombreOrganismo: point.querySelector("span").textContent.trim(),
 	            lat: parseFloat(point.getAttribute("data-lat")),
-	            lng: parseFloat(point.getAttribute("data-lng"))
+	            lng: parseFloat(point.getAttribute("data-lng")),
 	        }));
 
 	        console.log("Puntos cargados:", puntos);
 	        calculateRoute(puntos);
+
+	        // Registrar el inicio de la ruta
+	        tiempoInicio = Date.now();
 
 	        // Cargar descripciones desde el JSON
 	        cargarDescripcionesJSON();
@@ -90,16 +103,16 @@
 	    function calculateRoute(puntos) {
 	        if (puntos.length < 2) return;
 
-	        const waypoints = puntos.slice(1, -1).map(point => ({
+	        const waypoints = puntos.slice(1, -1).map((point) => ({
 	            location: new google.maps.LatLng(point.lat, point.lng),
-	            stopover: true
+	            stopover: true,
 	        }));
 
 	        const request = {
 	            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
 	            destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
 	            waypoints,
-	            travelMode: google.maps.TravelMode.WALKING // A pie
+	            travelMode: google.maps.TravelMode.WALKING, // A pie
 	        };
 
 	        directionsService.route(request, (result, status) => {
@@ -113,7 +126,7 @@
 
 	    async function cargarDescripcionesJSON() {
 	        try {
-	            const response = await fetch('/json/PunIntDescrip.json');
+	            const response = await fetch("/json/PunIntDescrip.json");
 	            if (!response.ok) {
 	                console.error("No se pudo cargar el JSON:", response.status);
 	                return;
@@ -127,70 +140,91 @@
 	        }
 	    }
 
-		function mostrarPuntoActual(index) {
-		    const punto = puntos[index];
-		    if (!punto) {
-		        console.error(`Punto no encontrado en el índice ${index}`);
-		        return;
-		    }
+	    function mostrarPuntoActual(index) {
+	        const punto = puntos[index];
+	        if (!punto) {
+	            console.error(`Punto no encontrado en el índice ${index}`);
+	            return;
+	        }
 
-		    console.log(`Mostrando punto actual:`, punto);
+	        console.log(`Mostrando punto actual:`, punto);
 
-		    // Buscar la descripción del punto en el JSON
-		    const descripcion = descripciones.find(desc => desc.id === punto.id)?.descripcion || "Descripción del punto de interés";
+	        // Actualizar la información del punto actual
+	        const descripcion = descripciones.find((desc) => desc.id === punto.id)?.descripcion || "Descripción del punto de interés";
+	        document.getElementById("nombrePunto").textContent = punto.nombreOrganismo;
+	        document.getElementById("imagenPunto").src = `/img/puntosInteres/${punto.id}.jpg`;
+	        document.getElementById("imagenPunto").onerror = () => {
+	            document.getElementById("imagenPunto").src = "/img/ImgComunPI.png";
+	        };
+	        document.getElementById("descripcionPunto").textContent = descripcion;
 
-		    // Actualizar contenido en la vista
-		    document.getElementById("nombrePunto").textContent = punto.nombreOrganismo;
-		    document.getElementById("imagenPunto").src = `/img/puntosInteres/${punto.id}.jpg`;
-		    document.getElementById("imagenPunto").onerror = () => {
-		        document.getElementById("imagenPunto").src = "/img/ImgComunPI.png";
-		    };
-		    document.getElementById("descripcionPunto").textContent = descripcion;
+	        // Configuración del audio
+	        if (audioActual) {
+	            audioActual.pause();
+	        }
+	        audioActual = new Audio(`/audio/${punto.id}.mp3`);
+	        audioActual.onerror = () => {
+	            audioActual.src = "/audio/Comun.mp3";
+	        };
 
-		    // Configurar y reproducir audio
-		    if (audioActual) {
-		        audioActual.pause(); // Pausar cualquier audio que esté en reproducción
-		    }
-		    audioActual = new Audio(`/audio/${punto.id}.mp3`);
-		    audioActual.onerror = () => {
-		        console.warn(`Audio para el punto ${punto.id} no encontrado. Cargando audio genérico.`);
-		        audioActual.src = "/audio/Comun.mp3";
-		    };
+	        document.getElementById("btnReproducirAudio").onclick = () => {
+	            if (audioActual) {
+	                audioActual.currentTime = 0;
+	                audioActual.play();
+	            }
+	        };
 
-		    document.getElementById("btnReproducirAudio").onclick = () => {
-		        if (audioActual) {
-		            audioActual.currentTime = 0; // Reiniciar el audio al inicio
-		            audioActual.play();
-		        }
-		    };
+	        // Configuración de los botones
+	        const btnSiguientePunto = document.getElementById("btnSiguientePunto");
+	        const btnTerminarRuta = document.getElementById("btnTerminarRuta");
 
-		    // Configuración del botón de navegación
-		    const btnSiguientePunto = document.getElementById("btnSiguientePunto");
-		    const btnTerminarRuta = document.getElementById("btnTerminarRuta");
+	        if (index === puntos.length - 1) {
+	            btnSiguientePunto.style.display = "none";
+	            btnTerminarRuta.style.display = "block";
+	        } else {
+	            btnSiguientePunto.style.display = "block";
+	            btnTerminarRuta.style.display = "none";
+	        }
+	    }
 
-		    if (index === puntos.length - 1) {
-		        // Último punto: Ocultar "Ir al Siguiente Punto", mostrar "Terminar ruta"
-		        btnSiguientePunto.style.display = "none";
-		        btnTerminarRuta.style.display = "block";
-		    } else {
-		        // No es el último punto: Mostrar "Ir al Siguiente Punto", ocultar "Terminar ruta"
-		        btnSiguientePunto.style.display = "block";
-		        btnTerminarRuta.style.display = "none";
-		    }
-		}
+	    document.addEventListener("DOMContentLoaded", () => {
+	        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+	        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
-		document.addEventListener("DOMContentLoaded", () => {
-		    document.getElementById("btnSiguientePunto").onclick = () => {
-		        if (puntoActualIndex < puntos.length - 1) {
-		            puntoActualIndex++;
-		            mostrarPuntoActual(puntoActualIndex);
-		        }
-		    };
+	        // Botón "Terminar Ruta"
+	        document.getElementById("btnTerminarRuta").onclick = () => {
+				const rutaId = document.getElementById("rutaIdInput").value;
+				   const fecha = new Date().toISOString().split('T')[0];
+				   const tiempoFinal = Date.now();
+				   const duracion = Math.floor((tiempoFinal - tiempoInicio) / 1000);
 
-		    // Configuración inicial
-		    cargarDescripcionesJSON();
-		    mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto al cargar la página
-		});
+				   console.log("Ruta ID:", rutaId);
+				   console.log("Fecha:", fecha);
+				   console.log("Duración:", duracion);
+
+				   if (!rutaId) {
+				       console.error("Error: 'rutaId' es null o vacío.");
+				       return;
+				   }
+
+				   document.getElementById("fechaInput").value = fecha;
+				   document.getElementById("tiempoInput").value = duracion;
+
+				   document.getElementById("guardarRutaForm").submit();
+	        };
+
+	        // Botón "Ir al Siguiente Punto"
+	        document.getElementById("btnSiguientePunto").onclick = () => {
+	            if (puntoActualIndex < puntos.length - 1) {
+	                puntoActualIndex++;
+	                mostrarPuntoActual(puntoActualIndex);
+	            }
+	        };
+
+	        // Inicializar los puntos y mostrar el primero
+	        cargarDescripcionesJSON();
+	        mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto al cargar la página
+	    });
 	</script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLMpyfvOmoEXcXj0TS7MwYk39OAz2c530&libraries=places&callback=initMap" async defer></script>

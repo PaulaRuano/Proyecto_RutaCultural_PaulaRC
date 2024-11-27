@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import proyecto.modelo.dao.MisRutasDAO;
+import proyecto.modelo.dao.MiRutaDAO;
 import proyecto.modelo.dao.RutaPredeterminadaDAO;
-import proyecto.modelo.dto.MisRutasDTO;
+import proyecto.modelo.dto.MiRutaDTO;
 import proyecto.modelo.dto.RutaPredeterminadaDTO;
 import proyecto.modelo.dto.UsuarioDTO;
 
@@ -17,11 +17,11 @@ import proyecto.modelo.dto.UsuarioDTO;
 @Service
 public class MisRutasServicio {
 
-    private final MisRutasDAO misRutasDAO;
+    private final MiRutaDAO misRutasDAO;
     private final RutaPredeterminadaDAO rutaPredeterminadaDAO;
 
     @Autowired
-    public MisRutasServicio(MisRutasDAO misRutasDAO, RutaPredeterminadaDAO rutaPredeterminadaDAO) {
+    public MisRutasServicio(MiRutaDAO misRutasDAO, RutaPredeterminadaDAO rutaPredeterminadaDAO) {
         this.misRutasDAO = misRutasDAO;
         this.rutaPredeterminadaDAO = rutaPredeterminadaDAO;
     }
@@ -42,7 +42,7 @@ public class MisRutasServicio {
         }
 
         // Crear y guardar la relación en Mis Rutas
-        MisRutasDTO misRutas = new MisRutasDTO();
+        MiRutaDTO misRutas = new MiRutaDTO();
         misRutas.setRuta(ruta);
         misRutas.setUsuario(usuario);
         misRutas.setFecha(LocalDate.now());

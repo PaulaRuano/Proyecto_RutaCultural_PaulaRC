@@ -22,7 +22,7 @@ public class SeguridadConfiguracion {
 						"/rutasPreder", "/api/ruta-predeterminada", "/crearRutaUsuario/**","/css/**", "/json/**", "/js/**", "/img/**")
 				.permitAll() // Permite acceso sin autenticación
 				.requestMatchers("/administradorVista", "/crearRutaPredeterminada").hasRole("ADMIN") // Acceso solo para administradores
-				.requestMatchers("/confirmarRutaUsuario", "/guardarRutaUsuario", "/audio/**","/listaMisRutas", "/guardarEnMisRutas","/hacerRuta","/perfilUsuario/**", "/cambiarContrasenia", "/cambiarCorreo", "/cambiarNombre")
+				.requestMatchers("/confirmarRutaUsuario", "/guardarRutaUsuario", "/audio/**","/listaMisRutas", "/guardarEnMisRutas","/hacerRuta","/listaRutasRealizadas", "/rutasRealizadas/guardar","/perfilUsuario/**", "/cambiarContrasenia", "/cambiarCorreo", "/cambiarNombre")
 				.authenticated() // Solo usuarios autenticados
 				.anyRequest().hasRole("CLIENTE") // Todas las demás solicitudes requieren rol CLIENTE
 				)
