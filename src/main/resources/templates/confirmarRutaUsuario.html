@@ -31,6 +31,7 @@
         <!-- Puntos Seleccionados -->
         <div class="mb-4">
             <h5 class="text-center">Puntos Seleccionados</h5>
+			<p class="text-center text-secondary">Pincha y arrastra los puntos para cambiar el orden</p>
 			<ul id="sortablePoints" class="list-group">
 			      <li th:each="punto : ${puntos}" 
 			          th:data-id="${punto.id}" 

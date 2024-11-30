@@ -19,7 +19,7 @@ public class SeguridadConfiguracion {
 		http
 		.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/login", "/home", "registrar", "/registro", "/api/**", "/listaRutasPredeterminadas", 
-						"/rutasPreder", "/api/ruta-predeterminada", "/crearRutaUsuario/**","/css/**", "/json/**", "/js/**", "/img/**")
+						"/rutasPreder", "/api/ruta-predeterminada", "/crearRutaUsuario/**","/detalleRutaPredeterminada/**","/css/**", "/json/**", "/js/**", "/img/**")
 				.permitAll() // Permite acceso sin autenticación
 				.requestMatchers("/administradorVista", "/crearRutaPredeterminada").hasRole("ADMIN") // Acceso solo para administradores
 				.requestMatchers("/confirmarRutaUsuario", "/guardarRutaUsuario", "/audio/**","/listaMisRutas", "/guardarEnMisRutas","/hacerRuta","/listaRutasRealizadas", "/rutasRealizadas/guardar","/perfilUsuario/**", "/cambiarContrasenia", "/cambiarCorreo", "/cambiarNombre")

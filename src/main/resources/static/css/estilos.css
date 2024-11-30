@@ -7,6 +7,7 @@ body{
  	font-family: "Unna", serif;	
 	background-color: white;
 	font-size: calc(1rem + 0.25vw);
+	height: 100%;
 }
 /*Navbar*/
 .custom-navbar {
@@ -36,6 +37,11 @@ body{
 
 .navbar-logo:hover {
     transform: scale(1.1); 
+}
+/*Footer*/
+.footer{
+	background-color: lightgrey;
+	padding: 1rem;
 }
 
 /*Página Principal - Inicio*/
@@ -97,6 +103,10 @@ body{
      justify-content: center;
  }
  
+ .feature-card{
+	margin-top: 1.2em;
+ }
+ 
  @media (min-width: 768px) {
     .image-section img {
     height: 100%;
@@ -108,6 +118,14 @@ body{
 .tpExplora{
 	color: rgb(219,10,19);
 	font-weight: bold;
+	font-size: calc(1.6rem + 1vw);	
+}
+.bIC{
+	background-color: rgb(219,10,19);
+	border: none;
+	font-size: 1.1em;
+		margin: 0 auto;
+		padding: 0.5em 1em 0.4em 1em;
 }
 
 div.pcontainer{
@@ -140,7 +158,11 @@ div.pcontainer{
 	background-color: black;
 }
 
-/*Seción ¿?*/
+/*Seción ¿Por Qué Elegirnos?*/
+.tPE{
+	font-size:  calc(1.9rem + 1vw);	
+	margin-top: 1.8em;
+}
 .feature-card {
       border: 1px solid rgb(117,40,100);
       border-radius: 10px;
@@ -182,7 +204,7 @@ div.pcontainer{
     border-radius: 10px;
     margin: 11em auto;
     padding: 30px 40px;
-    box-shadow: 20px 20px 80px black
+    box-shadow: 10px 10px 40px  black
 }
 
 .h2 {
@@ -290,24 +312,24 @@ a:hover {
 
 .btn.btn-block {
     border-radius: 20px;
-    background-color: black;
+    background-color: rgb(117,40,100);;
     color: #fff
 }
 
 .btn.btn-block:hover {
-    background-color: rgb(128, 128, 128)
+    background-color: rgb(80, 27, 68);
 }
 
 @media(max-width: 575px) {
     .wrapper {
-        margin: 10px
+        margin: 8em auto;
     }
 }
 
 @media(max-width:424px) {
     .wrapper {
         padding: 30px 10px;
-        margin: 5px
+        margin: 5px;
     }
 
     .option {
@@ -334,6 +356,20 @@ a:hover {
 }
 
 /* Lista Rutas P */
+/* Estilo de la tarjeta */
+.eRP{
+	margin-bottom: 1em;
+}
+.route-card-wrapper {
+  position: relative;
+  margin-bottom: 30px; /* Añade espacio entre tarjetas */
+  transition: all 0.3s ease;
+}
+
+.route-card-wrapper:hover {
+  transform: scale(1.02); /* Pequeño zoom al hacer hover */
+}
+
 .route-card {
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -343,6 +379,10 @@ a:hover {
   flex-direction: column;
 }
 
+.route-card:hover {
+  border: 2px solid rgb(117,40,100);
+}
+
 .route-image img {
   width: 100%;
   height: auto;
@@ -350,7 +390,7 @@ a:hover {
 
 .route-details {
   padding: 20px;
-  flex: 1; /* Asegura que el contenido tome el espacio disponible */
+  flex: 1;
 }
 
 .route-data {
@@ -361,7 +401,7 @@ a:hover {
 }
 
 .route-data .data-item {
-  flex: 1 1 45%; /* Ajusta al 45% del contenedor */
+  flex: 1 1 45%;
   background: #f8f9fa;
   padding: 10px 15px;
   border-radius: 5px;
@@ -374,29 +414,64 @@ a:hover {
   font-weight: bold;
 }
 
+/* Estilo del botón fuera del enlace */
+.route-card-button {
+  position: absolute;
+  bottom: -20px; /* Ajusta la posición del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%; /* Asegura que se alinee con la tarjeta */
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+.hNRP{
+	margin-bottom: 1em;
+	font-weight: bold;
+	font-size: calc(1.3rem + 0.29vw);
+}
+.btnGeMR{
+	background-color: rgb(117,40,100);
+	border: none;
+	font-size: calc(1rem + 0.21vw);
+}
+.route-card-wrapper:hover .route-card-button {
+  z-index: 2;
+}
+
+/* Responsive */
 @media (min-width: 1300px) {
   .route-card {
-    flex-direction: row; /* Cambia a diseño horizontal */
-    align-items: stretch; /* Asegura que la imagen y el contenido tengan la misma altura */
+    flex-direction: row;
+    align-items: stretch;
   }
+
   .route-image {
-    flex: 1; /* La imagen ocupa la mitad del espacio */
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa; /* Opcional: añade un fondo para la imagen */
+    background-color: #f8f9fa;
   }
+
   .route-image img {
     width: 100%;
-    height: 100%; /* Hace que la imagen llene su contenedor */
-    object-fit: cover; /* Mantiene las proporciones sin deformar */
+    height: 100%;
+    object-fit: cover;
   }
+
   .route-details {
-    flex: 1; /* Asegura que el contenido ocupe el resto del espacio */
+    flex: 1;
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .route-card-button {
+    position: static;
+    transform: none;
+    margin-top: 10px;
+    width: 100%;
   }
 }
 
@@ -440,7 +515,26 @@ a:hover {
     .poi-details {
       padding: 20px;
     }
-
+.cate{
+	font-size: calc(0.9rem + 0.28vw);	
+	margin: 0.2rem 0rem 0rem 0.6rem;
+}
+.pNo{
+	margin-bottom: 1.3em;
+	font-weight: bold;
+}
+.btnCR{
+	font-size: calc(1.1rem + 0.20vw);	
+	margin-bottom: 1.5em;
+}
+.btnS{
+	font-size: calc(1.1rem + 0.20vw);
+	background-color: rgb(117,40,100);	
+	border: none;
+}
+.btnS:hover{	
+	background-color: rgb(94, 32, 80);		
+}
     .poi-data {
       display: flex;
       flex-wrap: wrap;
