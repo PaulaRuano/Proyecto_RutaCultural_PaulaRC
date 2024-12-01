@@ -31,14 +31,17 @@
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/registrar">Registrarse</a>
-                </li>
-            </ul>
+					<!-- Mostrar opciones según la autenticación -->
+					               <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+					                   <a class="nav-link" href="/cerrarSesion">Cerrar Sesión</a>
+					               </li>
+					               <li class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
+					                   <a class="nav-link" href="/login">Login</a>
+					               </li>
+					               <li class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
+					                   <a class="nav-link" href="/registrar">Registrarse</a>
+					               </li>
+					           </ul>
         </div>
     </div>
 </nav>

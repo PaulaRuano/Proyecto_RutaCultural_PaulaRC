@@ -1,6 +1,7 @@
 package proyecto.modelo.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface MiRutaDAO extends JpaRepository<MiRutaDTO, Long> {
 
     @Query("SELECT COUNT(m) > 0 FROM MiRutaDTO m WHERE m.ruta = :ruta AND m.usuario = :usuario")
     boolean existsByRutaAndUsuario(@Param("ruta") RutaPredeterminadaDTO ruta, @Param("usuario") UsuarioDTO usuario);
+    
+    @Query("SELECT m FROM MiRutaDTO m WHERE m.usuario = :usuario AND m.ruta = :ruta")
+    Optional<MiRutaDTO> findByUsuarioAndRuta(@Param("usuario") UsuarioDTO usuario, @Param("ruta") RutaPredeterminadaDTO ruta);
+
 }

@@ -81,9 +81,7 @@ public class RutaRealizadaControlador {
 
             // Guardar la entidad
             rutaRealizadaServicio.crearRutaRealizada(rutaRealizada);
-
-            // Añadir mensaje de éxito
-            redirectAttributes.addFlashAttribute("success", "Ruta realizada guardada con éxito.");
+          
             return "listaRutasRealizadas";
 
         } catch (Exception e) {

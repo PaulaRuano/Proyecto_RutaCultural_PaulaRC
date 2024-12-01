@@ -17,6 +17,7 @@ body{
     margin: 15px; /* Espaciado exterior */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
     padding: 10px; /* Espaciado interno opcional */
+	text-align: center;
 }
 
 .custom-navbar a.navbar-brand {
@@ -143,6 +144,7 @@ div.pcontainer{
 
 .ts1{
 	color: rgb(240, 222, 2);
+	margin-top: 1em;
 }
 
 .as1{
