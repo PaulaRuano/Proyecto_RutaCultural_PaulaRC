@@ -41,7 +41,7 @@ public class ConfirmarRutaUsuarioControlador {
 
     @PostMapping("/confirmarRutaUsuario")
     public String confirmarRuta(
-            @RequestParam List<Long> puntoIds,
+            @RequestParam List<Long> puntoIds,     
             Model model,
             RedirectAttributes redirectAttributes) {
 
@@ -65,7 +65,7 @@ public class ConfirmarRutaUsuarioControlador {
         }
 
         // Agregar los puntos al modelo
-        model.addAttribute("puntos", puntosSeleccionados);
+        model.addAttribute("puntos", puntosSeleccionados); 
 
         // Devolver el nombre de la vista para confirmar la ruta
         return "confirmarRutaUsuario";
@@ -77,12 +77,21 @@ public class ConfirmarRutaUsuarioControlador {
                                      @RequestParam String municipio,
                                      @RequestParam String nombreRuta,
                                      @RequestParam List<Long> puntoIds,
-                                     RedirectAttributes redirectAttributes) {
+                                     RedirectAttributes redirectAttributes,
+                                     Model model) {
         try {
             // Validar si se han seleccionado puntos
             if (puntoIds == null || puntoIds.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "Debe seleccionar al menos 2 puntos.");
-                return "redirect:/crearRutaUsuario";
+                return "crearRutaUsuario";
+            }
+            
+            // Validar si el nombre de la ruta está vacío
+            if (nombreRuta == null || nombreRuta.trim().isEmpty()) {
+                model.addAttribute("error", "Introduce un nombre para la ruta, por favor.");
+                List<PuntoDeInteresDTO> puntos = puntoDeInteresServicio.obtenerPuntosPorIds(puntoIds); // Recuperar los puntos seleccionados
+                model.addAttribute("puntos", puntos); // Agregar puntos al modelo
+                return "confirmarRutaUsuario"; // Retornar la vista sin redirección
             }
 
             // Obtener el usuario autenticado
@@ -102,11 +111,11 @@ public class ConfirmarRutaUsuarioControlador {
                 rutaPuntoInteresDAO.save(relacion); // Guardar relación en la tabla intermedia
             }
 
-            redirectAttributes.addFlashAttribute("success", "Ruta creada con éxito.");
-            return "redirect:/crearRutaUsuario";
+            model.addAttribute("success", "Ruta creada con éxito.");
+            return "fragmentos/modalRutaUsuarioCreada"; 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al guardar la ruta: " + e.getMessage());
-            return "redirect:/confirmarRutaUsuario";
+            return "confirmarRutaUsuario";
         }
     }
 

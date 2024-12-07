@@ -13,75 +13,73 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-	<!-- Incluir la barra de navegación -->
-	<div th:insert="~{fragmentos/nav :: nav}"></div>
-	<!-- Contenido principal -->
-	   <main class="container my-5">
-	       <div class="row">
-			<a th:href="/listaRutasPredeterminadas" class="card route-card mb-4 text-decoration-none">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
-			  <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
-			</svg>
-			</a>
-	           <div class="col-md-6">
-	               <!-- Imagen de la ruta -->
-				   <img class="img-fluid rounded" th:src="${imagen}" onerror="this.src='/img/ImgComunPI.png'" alt="Imagen de la ruta">
-	           </div>
-	           <div class="col-md-6">
-	               <!-- Detalles de la ruta -->
-	               <h1 th:text="${ruta.nombre}">Nombre de la Ruta</h1>
-	               <p id="descripcion">Cargando descripción...</p>
-	               <ul class="list-group">
-	                   <li class="list-group-item">
-	                       <strong>Duración:</strong> <span th:text="${ruta.duracion}">0</span> horas
-	                   </li>
-	                   <li class="list-group-item">
-	                       <strong>Distancia:</strong> <span th:text="${ruta.distancia}">0</span> metros
-	                   </li>
-	                   <li class="list-group-item">
-	                       <strong>Tipo:</strong> <span th:text="${ruta.tipo}">T</span>
-	                   </li>
-	                   <li class="list-group-item">
-	                       <strong>Municipio:</strong> <span th:text="${ruta.municipio}">Municipio</span>
-	                   </li>
-	               </ul>
-	           </div>
-	       </div>
-	   </main>
-	   <!-- JavaScript -->
-	    <script>
-	        // ID de la ruta (usando Thymeleaf para pasarlo al front)
-			const rutaId = '[[${ruta.id}]]';
+    <!-- Barra de navegación -->
+    <div th:insert="~{fragmentos/nav :: nav}"></div>
 
-			async function cargarDescripcionRuta() {
-			    try {
-			        const response = await fetch("/json/RutaDescrip.json");
-			        if (!response.ok) {
-			            console.error("No se pudo cargar el JSON:", response.status);
-			            document.getElementById("descripcion").textContent = "Descripción no disponible.";
-			            return;
-			        }
+    <!-- Contenido principal -->
 
-			        const descripciones = await response.json();
-			        console.log("Descripciones cargadas:", descripciones);
+	<main class="container my-5">
+	    <a th:href="@{/listaRutasPredeterminadas}" class="back-button">
+	        &larr; Volver a la lista
+	    </a>
 
-			        // Buscar la descripción correspondiente al ID de la ruta
-			        const ruta = descripciones.rutas.find(r => Number(r.id) === Number(rutaId));
-			        if (ruta) {
-			            document.getElementById("descripcion").textContent = ruta.descripcion;
-			        } else {
-			            document.getElementById("descripcion").textContent = "Descripción no disponible.";
-			        }
-			    } catch (error) {
-			        console.error("Error cargando descripciones:", error);
-			        document.getElementById("descripcion").textContent = "Error cargando la descripción.";
-			    }
-			}
+	    <div class="row g-4">
+	        <div class="col-12 col-md-6">
+	            <img class="img-fluid rounded" th:src="${imagen}" onerror="this.src='/img/ImgComunPI.png'" alt="Imagen de la ruta">
+	        </div>
 
-			cargarDescripcionRuta();
-	    </script>
-		<div th:insert="~{fragmentos/footer :: footer}"></div>
-	 <!-- Bootstrap JS -->
-	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	        <div class="col-12 col-md-6">
+	            <h1 th:text="${ruta.nombre}">Nombre de la Ruta</h1>
+				<p id="descripcion">Cargando descripción...</p>
+	            <ul class="details-list">
+	                <li><strong>Duración: </strong><span class="duracion" th:data-minutos="${ruta.duracion}" th:text="'Cargando...'"></span></li>
+	                <li><strong>Distancia: </strong> <span class="distancia" th:data-metros="${ruta.distancia}" th:text="'Cargando...'"></span></li>
+	                <li><strong>Municipio:</strong> <span th:text="${ruta.municipio}">Municipio</span></li>
+	            </ul>
+	        </div>
+	    </div>
+
+	    <!-- Lista de puntos -->
+	    <section class="points-list">
+	        <h2>Puntos de Interés</h2>
+	        <ul class="list-group">
+	            <li class="list-group-item" th:each="punto : ${puntosDeInteres}">
+	                <strong th:text="${punto.nombreOrganismo}">Nombre del Punto</strong><br>	               
+	                <span><strong>Calle:</strong> <span th:text="${punto.calle}">Calle</span></span>
+	            </li>
+	        </ul>
+	    </section>
+	</main>
+
+    <!-- Script para cargar la descripción -->
+    <script>
+        const rutaId = '[[${ruta.id}]]';
+
+        async function cargarDescripcionRuta() {
+            try {
+                const response = await fetch("/json/RutaDescrip.json");
+                if (!response.ok) {
+                    document.getElementById("descripcion").textContent = "Descripción no disponible.";
+                    return;
+                }
+
+                const descripciones = await response.json();
+                const ruta = descripciones.rutas.find(r => Number(r.id) === Number(rutaId));
+                document.getElementById("descripcion").textContent = ruta ? ruta.descripcion : "Descripción no disponible.";
+            } catch (error) {
+                document.getElementById("descripcion").textContent = "Error cargando la descripción.";
+            }
+        }
+
+        cargarDescripcionRuta();
+    </script>
+	
+	<script th:src="@{/js/procesarDistanciaYDuracion.js}"></script>
+
+    <!-- Pie de página -->
+    <div th:insert="~{fragmentos/footer :: footer}"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

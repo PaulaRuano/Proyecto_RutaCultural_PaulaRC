@@ -110,11 +110,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-        	<groupId>com.proyecto_Guia_CyL</groupId>
-        	<artifactId>Proyecto-Paula-Ruano-Castillo</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

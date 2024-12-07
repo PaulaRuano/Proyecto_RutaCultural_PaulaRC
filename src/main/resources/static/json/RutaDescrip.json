@@ -3,12 +3,12 @@
     {
       "id": 1,
       "nombre": "Ruta Museos Valladilid",     
-	  "descripcion": "Ruta por algunos de los museos más importantes del centro de Valladolid"      
+	  "descripcion": "Ruta por algunos de los museos más importantes del centro de Valladolid."      
     },
     {
       "id": 2,
       "nombre": "Salamanca",
-      "descripcion": "Ruta por los puntos mas importantes de la ciudad de Salamanca"      
+      "descripcion": "Ruta por los puntos mas importantes de la ciudad de Salamanca."      
     }
   ]
 }

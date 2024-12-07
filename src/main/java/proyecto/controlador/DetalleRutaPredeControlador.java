@@ -26,27 +26,29 @@ public class DetalleRutaPredeControlador {
         this.rutaPredeterminadaServicio = rutaPredeterminadaServicio;
         this.puntoDeInteresServicio = puntoDeInteresServicio;
     }
-
     @GetMapping("/{id}")
     public String mostrarDetalle(@PathVariable("id") int id, Model model) {
-        // Manejar el Optional devuelto por obtenerRutaPorId
+        // Obtener la ruta
         RutaPredeterminadaDTO ruta = rutaPredeterminadaServicio.obtenerRutaPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Ruta con ID " + id + " no encontrada."));
 
-        // Obtener el primer punto de interés relacionado con la ruta
+        // Obtener el primer punto de interés para la imagen
         List<Long> idsPuntos = rutaPredeterminadaServicio.obtenerIdsPuntosDeRuta(id);
         PuntoDeInteresDTO primerPunto = puntoDeInteresServicio.obtenerPuntosPorIdsDesdeBBDD(idsPuntos).stream()
                 .findFirst()
                 .orElse(null);
 
-        // Generar la URL de la imagen del primer punto
+        // Generar la URL de la imagen
         String imagenRuta = (primerPunto != null) ? "/img/puntosInteres/" + primerPunto.getId() + ".jpg" : "/img/ImgComunPI.png";
 
-        // Pasar datos a la vista
+        // Obtener detalles de todos los puntos
+        List<PuntoDeInteresDTO> puntosDeInteres = puntoDeInteresServicio.obtenerPuntosPorIdsDesdeBBDD(idsPuntos);
+
+        // Pasar los datos a la vista
         model.addAttribute("ruta", ruta);
         model.addAttribute("imagen", imagenRuta);
+        model.addAttribute("puntosDeInteres", puntosDeInteres);
 
-        return "detalleRutaPredeterminada"; // Nombre del archivo HTML
+        return "detalleRutaPredeterminada";
     }
-
 }
