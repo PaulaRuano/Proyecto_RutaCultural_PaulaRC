@@ -49,4 +49,17 @@ public class RutaUsuarioServicio {
     public Optional<RutaUsuarioDTO> obtenerRutaPorId(Integer id) {
         return rutaUsuarioDAO.findById(id);
     }
+    
+    @Transactional
+    public void eliminarRutaUsuario(int id) {
+        // Verificar si la ruta existe
+        RutaUsuarioDTO ruta = rutaUsuarioDAO.findById(id)
+                .orElseThrow(() -> new RuntimeException("La ruta con ID " + id + " no existe."));
+
+        // Eliminar relaciones en la tabla intermedia
+        rutaPuntoInteresDAO.deleteByRutaId(id);
+
+        // Eliminar la ruta
+        rutaUsuarioDAO.deleteById(id);
+    }
 }

@@ -36,11 +36,11 @@ public class MiRutaControlador {
         this.rutaUsuarioServicio = rutaUsuarioServicio;
         this.detallesUsuarioServicio = detallesUsuarioServicio;
     }
-    @GetMapping("/listaMisRutas")
-    public String listarMisRutas(Model model) {
+    
+    private void cargarRutasEnModelo(Model model) {
         UsuarioDTO usuario = detallesUsuarioServicio.obtenerUsuarioActual();
 
-        // Rutas creadas por el usuario
+        // Cargar las rutas creadas por el usuario
         List<RutaUsuarioDTO> rutasUsuario = rutaUsuarioServicio.obtenerRutasPorUsuario(usuario);
         List<Map<String, Object>> rutasUsuarioConImagen = rutasUsuario.stream()
             .map(ruta -> {
@@ -49,14 +49,9 @@ public class MiRutaControlador {
 
                 // Obtener IDs de los puntos asociados a la ruta
                 List<Long> idsPuntos = rutaUsuarioServicio.obtenerIdsPuntosDeRuta(ruta.getId());
-                if (!idsPuntos.isEmpty()) {
-                    rutaMap.put("imagen", "/img/puntosInteres/" + idsPuntos.get(0) + ".jpg");
-                } else {
-                    rutaMap.put("imagen", "/img/ImgComunPi.png");
-                }
+                rutaMap.put("imagen", idsPuntos.isEmpty() ? "/img/ImgComunPi.png" : "/img/puntosInteres/" + idsPuntos.get(0) + ".jpg");
                 return rutaMap;
             })
-            // Ordenar por fechaCreacion (más recientes primero)
             .sorted((a, b) -> {
                 LocalDate fechaA = ((RutaUsuarioDTO) a.get("ruta")).getFechaCreacion();
                 LocalDate fechaB = ((RutaUsuarioDTO) b.get("ruta")).getFechaCreacion();
@@ -64,10 +59,9 @@ public class MiRutaControlador {
             })
             .toList();
 
-        // Rutas predeterminadas añadidas a "Mis Rutas"
+        // Cargar las rutas predeterminadas añadidas por el usuario
         List<Map<String, Object>> rutasMisRutasConImagen = misRutasServicio.obtenerRutasPredeterminadasConDetalles(usuario)
             .stream()
-            // Ordenar por fecha (más recientes primero)
             .sorted((a, b) -> {
                 LocalDate fechaA = (LocalDate) a.get("fecha");
                 LocalDate fechaB = (LocalDate) b.get("fecha");
@@ -75,14 +69,36 @@ public class MiRutaControlador {
             })
             .toList();
 
-        // Pasar las listas al modelo
+        // Agregar las rutas al modelo
         model.addAttribute("rutasUsuario", rutasUsuarioConImagen);
         model.addAttribute("rutasMisRutas", rutasMisRutasConImagen);
+    }
 
+    
+    @GetMapping("/listaMisRutas")
+    public String listarMisRutas(Model model) {
+        cargarRutasEnModelo(model);
         return "listaMisRutas";
     }
 
+    @GetMapping("/eliminarRutaUsuario")
+    public String eliminarRutaUsuario(@RequestParam int id, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            // Eliminar la ruta
+            rutaUsuarioServicio.eliminarRutaUsuario(id);
 
+            // Mensaje de éxito
+            redirectAttributes.addFlashAttribute("success", "Ruta eliminada con éxito.");
+        } catch (Exception e) {
+            // Manejo de errores
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar la ruta: " + e.getMessage());
+        }
+
+        // Volver a cargar las rutas en el modelo
+        cargarRutasEnModelo(model);
+
+        return "listaMisRutas";
+    }
     
     @PostMapping("/guardarEnMisRutas")
     public String guardarEnMisRutas(@RequestParam Integer rutaId, RedirectAttributes redirectAttributes) {
@@ -100,5 +116,7 @@ public class MiRutaControlador {
 
         return "redirect:/listaRutasPredeterminadas";
     }
+    
+    
 
 }
