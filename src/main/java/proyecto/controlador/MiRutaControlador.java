@@ -116,7 +116,4 @@ public class MiRutaControlador {
 
         return "redirect:/listaRutasPredeterminadas";
     }
-    
-    
-
 }

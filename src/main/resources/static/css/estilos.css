@@ -387,7 +387,7 @@ a:hover {
 }
 
 .route-card-wrapper:hover {
-  transform: scale(1.02); /* Pequeño zoom al hacer hover */
+  transform: scale(1.02); 
 }
 
 .route-card {
@@ -689,6 +689,7 @@ a:hover {
         padding: 15px;
     }
 }
+
 /*Mis rutas*/
 /* Ícono de la papelera */
 .icon-trash {
@@ -704,3 +705,95 @@ a:hover {
 .icon-trash:hover {
     transform: scale(1.2); 
 }
+/* Rutas Creadas y Guardadas */
+.route-card-wrapper {
+    position: relative;
+    margin-bottom: 3.5em; /* espacio entre tarjetas */
+    transition: all 0.3s ease;
+}
+
+.route-card-wrapper:hover {
+    transform: scale(1.02); 
+}
+
+.route-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.route-card:hover {
+    border: 2px solid rgb(117,40,100);
+}
+
+.route-image img {
+    width: 100%;
+    height: auto;
+}
+
+.route-details {
+    padding: 20px;
+    flex: 1;
+}
+
+.route-data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.route-data .data-item {
+    flex: 1 1 45%;
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-data .data-item strong {
+    display: block;
+    font-weight: bold;
+}
+
+.route-card-button {
+    position: absolute;
+    bottom: -20px; /* Ajusta la posición del botón */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Asegura que se alinee con la tarjeta */
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.btnGeMR {
+    background-color: rgb(117,40,100);
+    border: none;
+    font-size: calc(1rem + 0.21vw);
+}
+
+.btnGeMR:hover {
+    background-color: rgb(97, 33, 83);
+}
+
+/* Botón "Comenzar" */
+.btnCR {
+    background-color: rgb(117, 40, 100);
+    border: none;
+    font-size: calc(1rem + 0.21vw);
+    color: #fff;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btnCR:hover {
+    background-color: rgb(97, 33, 83);
+    color: #fff;
+    text-decoration: none;
+}
+
+

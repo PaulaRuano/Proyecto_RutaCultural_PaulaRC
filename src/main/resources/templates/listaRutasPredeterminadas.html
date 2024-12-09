@@ -21,9 +21,9 @@
 	    
 		<div class=" row mt-4">
 		    <div class="col-md-6" th:each="rutaMap : ${rutas}">
-		        <div class=" route-card-wrapper">
+		        <div class="route-card-wrapper">
 		            <!-- Tarjeta -->
-		            <a th:href="@{/detalleRutaPredeterminada/{id}(id=${rutaMap['ruta'].id})}" class="card route-card mb-4 text-decoration-none">
+					<a th:href="@{/detalleRuta/predeterminada/{id}(id=${rutaMap['ruta'].id}, origen='listaRutasPredeterminadas')}" class="card route-card mb-4 text-decoration-none">
 		                <div class="route-image">
 		                    <img class="card-img-top" alt="Imagen de la ruta" th:src="${rutaMap['imagen']}" onerror="this.src='/img/ImgComunPi.png'">
 		                </div>

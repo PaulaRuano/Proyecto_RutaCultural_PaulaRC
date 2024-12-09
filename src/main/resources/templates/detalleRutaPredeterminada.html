@@ -19,9 +19,9 @@
     <!-- Contenido principal -->
 
 	<main class="container my-5">
-	    <a th:href="@{/listaRutasPredeterminadas}" class="back-button">
-	        &larr; Volver a la lista
-	    </a>
+		<a th:href="@{/{origen}(origen=${origen})}" class="back-button">
+		    &larr; Volver a la lista
+		</a>
 
 	    <div class="row g-4">
 	        <div class="col-12 col-md-6">
