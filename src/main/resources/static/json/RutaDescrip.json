@@ -3,12 +3,12 @@
     {
       "id": 1,
       "nombre": "Ruta Museos Valladilid",     
-	  "descripcion": "Ruta por algunos de los museos más importantes del centro de Valladolid."      
+	  "descripcion": "Ruta por algunos de los museos más importantes del centro de Valladolid. Durante el trayecto, podrás descubrir espacios llenos de historia, arte y cultura que reflejan el rico patrimonio de la provincia. Es ideal para los amantes de la cultura que desean explorar las joyas museísticas de Valladolid."      
     },
     {
       "id": 2,
       "nombre": "Salamanca",
-      "descripcion": "Ruta por los puntos mas importantes de la ciudad de Salamanca."      
+      "descripcion": "Ruta por los puntos mas importantes de la ciudad de Salamanca. Esta ruta ofrece una experiencia única que combina la belleza de sus monumentos históricos con la esencia universitaria de esta ciudad."      
     }
   ]
 }

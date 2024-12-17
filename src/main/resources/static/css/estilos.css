@@ -39,6 +39,10 @@ body{
 .navbar-logo:hover {
     transform: scale(1.1); 
 }
+
+#navReg >a, #navLogOut > a, #navLog > a{
+	color: rgb(117, 40, 100);
+}
 /*Footer*/
 .footer{
 	background-color: lightgrey;
@@ -133,7 +137,7 @@ body{
 	
 }
 .bMR{
-	background-color: rgb(27, 70, 145);
+	background-color: rgb(117, 40, 100);
 	border: none;
 		font-size: 1.1em;
 		margin: 0 auto;
@@ -141,7 +145,7 @@ body{
 		color: white;
 }
 .bMR:hover{
-	background-color: rgb(21, 56, 115);
+	background-color: rgb(87, 30, 74);
 	color: white;
 }
 div.pcontainer{
@@ -177,7 +181,7 @@ div.pcontainer{
 
 /*Seción ¿Por Qué Elegirnos?*/
 .tPE{
-	font-size:  calc(1.9rem + 1vw);	
+	font-size: calc(1.9rem + 1vw);	
 	margin-top: 1.8em;
 }
 .feature-card {
@@ -332,12 +336,16 @@ a:hover {
 
 .btn.btn-block {
     border-radius: 20px;
-    background-color: rgb(117,40,100);;
-    color: #fff
+    background-color: rgb(117,40,100);
+    color: #fff;
+	font-size: calc(1rem + 0.25vw);
 }
 
 .btn.btn-block:hover {
     background-color: rgb(80, 27, 68);
+}
+.menER{
+	margin-top: 0.8em;
 }
 
 @media(max-width: 575px) {
@@ -382,8 +390,11 @@ a:hover {
 }
 .route-card-wrapper {
   position: relative;
-  margin-bottom: 3.5em; /* espacio entre tarjetas */
+  margin-bottom: 3.5em; 
   transition: all 0.3s ease;
+  max-width: 400px; /* Establece un ancho máximo para las tarjetas */
+  margin-left: auto; /* Centra las tarjetas horizontalmente */
+  margin-right: auto;
 }
 
 .route-card-wrapper:hover {
@@ -524,7 +535,7 @@ a:hover {
 .points-list {
     margin-top: 2rem;
 }
-
+/*crear ruta*/
 /*Lista pI*/
 .poi-card {
       border: 1px solid #ddd;
@@ -551,7 +562,7 @@ a:hover {
       bottom: 10px;
       right: 10px;
       background-color: #fff;
-      color: #007bff;
+      color: rgb(117, 40, 100);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -573,9 +584,11 @@ a:hover {
 	margin-bottom: 1.3em;
 	font-weight: bold;
 }
-.btnCR{
+#createRouteButton{
 	font-size: calc(1.1rem + 0.20vw);	
 	margin-bottom: 1.5em;
+	background-color: rgb(117, 40, 100);
+	color: white;
 }
 .btnS{
 	font-size: calc(1.1rem + 0.20vw);
@@ -610,6 +623,11 @@ a:hover {
 	   .placeholder-text { color: gray; font-style: italic; }
 	   .poi-card.selected { background-color: #e9fce9; border-color: #4caf50; }
 	   .poi-card.selected .poi-details { background-color: #e9fce9; 
+	}
+	.poi-card.selected .btnS {
+	    background-color: rgb(117, 40, 100);
+	    color: white;
+	    border: none;
 	}
 	   
 /* Mobile-first: ocupa el 100% */
@@ -659,7 +677,7 @@ a:hover {
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.3);
 }
 
 .admin .btn-secondary {
@@ -672,12 +690,12 @@ a:hover {
 }
 
 .admin .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: rgb(117, 40, 100);
+    border-color: rgb(117, 40, 100);
 }
 
 .admin .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: rgb(97, 33, 83);
 }
 
 .admin .alert {
@@ -794,6 +812,32 @@ a:hover {
     background-color: rgb(97, 33, 83);
     color: #fff;
     text-decoration: none;
+}
+
+/*Hacer ruta*/
+.timeline .point {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.timeline .point .circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.timeline .point.active .circle {
+    background-color: rgb(117, 40, 100); /* Punto activo */
+}
+
+.timeline .point.pending .circle {
+    background-color: grey; /* Puntos pendientes */
+}
+
+.timeline .point span {
+    font-size: 16px;
 }
 
 

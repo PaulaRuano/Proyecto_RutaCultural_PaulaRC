@@ -26,7 +26,7 @@ public class CategoriaDTO {
 	 * Identificador único de la categoria
 	 * No puede ser null
 	 */
-	@Id // Clave primaria	
+	@Id 	
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
 	
@@ -37,5 +37,4 @@ public class CategoriaDTO {
 	@NonNull
 	@Column(nullable = false)
 	private String nombreCategoria;
-	
 }

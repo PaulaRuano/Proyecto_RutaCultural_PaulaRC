@@ -1,5 +1,6 @@
 package proyecto.modelo.dto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,11 +27,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor		  // Constructor vacío
 @AllArgsConstructor       // Constructor con todos los atributos
-@RequiredArgsConstructor  // Constructor sin id
 @Table(name = "usuario") //  Nombre de la tabla
 public class UsuarioDTO {
-	//Atributos
-	
 		/** 
 		 * Identificador único del usuario.
 		 */
@@ -41,7 +39,7 @@ public class UsuarioDTO {
 		/**
 		 * Nombre de usuario
 		 */
-		@NonNull
+		@Column(nullable = false)
 		private String usuario;
 		
 		/**
@@ -49,7 +47,7 @@ public class UsuarioDTO {
 		 * Debe tener al menos 6 caracteres
 		 */
 		@Size(min = 6, max = 700)
-		@NonNull
+		@Column(nullable = false)
 		private String contrasenia;
 		
 		/**
@@ -59,19 +57,19 @@ public class UsuarioDTO {
 		 * @see utiles.Validaciones -> esFormatoCorreoValido(String correo)
 		 */
 		@Email
-		@NonNull
+		@Column(nullable = false)
 		private String correo;
 		
 		/**
 		 * Rol del usuario
 		 * Cuando se crea el usuario, el rol por defecto es cliente
 		 */
-		@NonNull
+		@Column(nullable = false)
 	    private String rol = "cliente";
 		
 		/**
 		 * Boolean para la baja de un usuario
 		 */
-		@NonNull
+		@Column(nullable = false)
 	    private boolean baja = false;	
 }

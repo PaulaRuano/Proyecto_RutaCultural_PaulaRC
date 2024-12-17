@@ -122,7 +122,7 @@
         const request = {
             origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
             destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
-            waypoints,
+            waypoints, // letras por defecto, se puede personalizar con el objeto  el objeto google.maps.Marker
             travelMode: google.maps.TravelMode.WALKING
         };
 

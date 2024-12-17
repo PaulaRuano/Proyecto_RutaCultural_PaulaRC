@@ -31,15 +31,14 @@ public class RutaUsuarioDTO extends RutaDTO{
     @JoinColumn(name = "usuario_id", nullable = false) // Clave foránea a la tabla Usuario
     private UsuarioDTO usuario;
     
+    /** Fecha de creación de la ruta */
     @NonNull
     @Column(nullable = false)
     private LocalDate fechaCreacion;
 
     /** Constructor que inicializa 'tipo' a "U" */
     public RutaUsuarioDTO(String nombre, Double duracion, int distancia, String municipio, UsuarioDTO usuario) {
-        super(nombre, duracion, distancia, "U", municipio); // Inicializa 'tipo' a "U"
+        super(nombre, duracion, distancia, "U", municipio); 
         this.usuario = usuario;
     }
-    
-    
 }

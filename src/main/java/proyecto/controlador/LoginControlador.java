@@ -25,7 +25,6 @@ public class LoginControlador {
 		this.usuarioServicio = usuarioServicio;        
 	}
 
-
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model,
                                          @RequestParam(value = "error", required = false) String error) {

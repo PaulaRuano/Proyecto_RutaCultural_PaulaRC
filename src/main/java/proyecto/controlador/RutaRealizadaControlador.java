@@ -1,13 +1,17 @@
 package proyecto.controlador;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import proyecto.modelo.UsuarioDetalles;
 import proyecto.modelo.dao.RutaPredeterminadaDAO;
 import proyecto.modelo.dao.RutaUsuarioDAO;
 import proyecto.modelo.dao.UsuarioDAO;
@@ -47,10 +52,20 @@ public class RutaRealizadaControlador {
 
     @GetMapping("/listaRutasRealizadas")
     public String mostrarRutasRealizadas(Model model) {
-        List<Map<String, Object>> rutasConTitulos = rutaRealizadaServicio.obtenerRutasConTitulos();
-        model.addAttribute("rutasRealizadas", rutasConTitulos);
-        return "listaRutasRealizadas"; // Nombre de la vista
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UsuarioDetalles usuarioDetalles = (UsuarioDetalles) authentication.getPrincipal();
+
+        // Usar el ID del usuario para filtrar rutas
+        int usuarioId = usuarioDetalles.getUsuario().getId();
+
+        // Obtener las rutas realizadas por el usuario
+        List<RutaRealizadaDTO> rutasRealizadas = rutaRealizadaServicio.obtenerRutasRealizadasPorUsuario(usuarioId);
+
+        model.addAttribute("rutasRealizadas", rutasRealizadas);
+        return "listaRutasRealizadas";
     }
+
 
     @PostMapping("/rutasRealizadas/guardar")
     public String guardarRutaRealizada(
@@ -58,36 +73,34 @@ public class RutaRealizadaControlador {
         @RequestParam Integer usuarioId,
         @RequestParam String fecha,
         @RequestParam Integer tiempo,
-        RedirectAttributes redirectAttributes
+        Model model
     ) {
         try {
-            // Buscar la ruta en ambos DAOs
+            // Buscar la ruta y el usuario
             Optional<RutaDTO> rutaOpt = rutaUsuarioDAO.findById(rutaId)
-                    .map(ruta -> (RutaDTO) ruta) // Convertir a RutaDTO para compatibilidad
+                    .map(ruta -> (RutaDTO) ruta)
                     .or(() -> rutaPredeterminadaDAO.findById(rutaId).map(ruta -> (RutaDTO) ruta));
 
             RutaDTO ruta = rutaOpt.orElseThrow(() -> new IllegalArgumentException("Ruta no encontrada."));
-
-            // Buscar el usuario
             UsuarioDTO usuario = usuarioDAO.findById(usuarioId)
                     .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
 
-            // Crear la entidad RutaRealizadaDTO
+            // Guardar la ruta realizada
             RutaRealizadaDTO rutaRealizada = new RutaRealizadaDTO();
             rutaRealizada.setRuta(ruta);
             rutaRealizada.setUsuario(usuario);
             rutaRealizada.setFecha(LocalDate.parse(fecha));
             rutaRealizada.setTiempo(tiempo);
-
-            // Guardar la entidad
             rutaRealizadaServicio.crearRutaRealizada(rutaRealizada);
-          
-            return "listaRutasRealizadas";
 
+            // Cargar las rutas realizadas en el modelo
+            List<RutaRealizadaDTO> rutasRealizadas = rutaRealizadaServicio.obtenerRutasRealizadasPorUsuario(usuarioId);
+            model.addAttribute("rutasRealizadas", rutasRealizadas);
+
+            return "listaRutasRealizadas";
         } catch (Exception e) {
-            // Capturar cualquier excepción y redirigir con mensaje de error
-            redirectAttributes.addFlashAttribute("error", "Error al guardar la ruta: " + e.getMessage());
-            return "redirect:/hacerRuta";
+            model.addAttribute("error", "Error al guardar la ruta: " + e.getMessage());
+            return "hacerRuta";
         }
     }
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeControlador {
-	@GetMapping("/home")
+	   @GetMapping({"/home", "/"}) 
 	public String mostrarHome(Model model) {
 		// Verificar si el usuario está autenticado
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

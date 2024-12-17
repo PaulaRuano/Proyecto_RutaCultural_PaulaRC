@@ -32,11 +32,11 @@ public class PuntoDeInteresDTO {
 	 * Identificador único del punto de interés
 	 * No puede ser null
 	 */
-	@Id // Clave primaria	
+	@Id 
 	private Long id;
 	
 	/**
-	 * Nombre del organismo
+	 * Nombre del organismo del punto de interés
 	 * No puede ser null
 	 */
 	@Column(nullable = false)
@@ -72,6 +72,7 @@ public class PuntoDeInteresDTO {
 	
 	/**
 	 * Categoria del punto de interés
+	 * Relación con la tabla categoria (clave foránea)
 	 * No puede ser null
 	 * 
 	 * @see CategoriaDTO

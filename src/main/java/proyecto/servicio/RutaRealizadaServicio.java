@@ -3,7 +3,9 @@ package proyecto.servicio;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,8 +42,7 @@ public class RutaRealizadaServicio {
 	     */
 
 	    @Transactional
-	    public void crearRutaRealizada(RutaRealizadaDTO rutaRealizada) {
-	    	 System.out.println("Creando ruta realizada: " + rutaRealizada);
+	    public void crearRutaRealizada(RutaRealizadaDTO rutaRealizada) {	    	
 	        rutaRealizadaDAO.save(rutaRealizada); // Guardar directamente el objeto recibido
 	    }
 
@@ -67,6 +68,13 @@ public class RutaRealizadaServicio {
 
 	            return rutaMap;
 	        }).toList();
+	    }
+	    
+
+	    public List<RutaRealizadaDTO> obtenerRutasRealizadasPorUsuario(int usuarioId) {
+	        return rutaRealizadaDAO.findAll().stream()
+	                .filter(ruta -> ruta.getUsuario().getId() == usuarioId)
+	                .toList();
 	    }
 
 }

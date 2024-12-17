@@ -24,23 +24,28 @@ import lombok.Setter;
 @AllArgsConstructor       // Constructor con todos los atributos
 @Table(name = "ruta_realizada")    //  Nombre de la tabla
 public class RutaRealizadaDTO {
+	 /** Identificador único de la ruta realizada */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	 /** Relación con la tabla ruta (clave foránea) */
 	@ManyToOne
 	@JoinColumn(name = "id_ruta", nullable = false)
-	private RutaDTO ruta; // Relación con la tabla `ruta`
+	private RutaDTO ruta; 
 
+	 /**Relación con la tabla usuario (clave foránea) */
 	@ManyToOne
 	@JoinColumn(name = "id_usuario", nullable = false)
-	private UsuarioDTO usuario; // Relación con la tabla `usuario`
+	private UsuarioDTO usuario; 
 
+	 /** Fecha en la que se ha terminado la ruta */
 	@Column(nullable = false)
-	private LocalDate fecha; // Fecha en la que se añade a "Mis Rutas"
+	private LocalDate fecha; 
 
+	 /** Tiempo tomado para realizar la ruta en segundos */
 	@NonNull
-	@Column(nullable = false) // Tiempo en minutos o segundos (según lo definido)
+	@Column(nullable = false)
 	private Integer tiempo;
 
 }

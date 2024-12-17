@@ -7,6 +7,6 @@ import proyecto.modelo.dto.CategoriaDTO;
 import java.util.Optional;
 
 public interface CategoriaDAO extends JpaRepository<CategoriaDTO, Long> {
-    Optional<CategoriaDTO> findByNombreCategoriaContainingIgnoreCase(String nombreCategoria);
+
     Optional<CategoriaDTO> findByNombreCategoria(String nombreCategoria);
 }

@@ -8,5 +8,15 @@
     "id": 1261041538081,
     "nombre": "Museo Nacional de Escultura. Colegio de San Gregorio",
     "descripcion": "El Museo Nacional de Escultura está situado en la calle Cadenas de San Gregorio, Valladolid. El museo se divide en tres sedes: El Colegio de San Gregorio, El Palacio de Villena y La Casa del Sol y la iglesia de San Benito el Viejo"
-  }
+  },
+  {
+      "id": 1261041546928,
+      "nombre": "Casa Museo de José Zorrilla",
+      "descripcion": "La Casa de Zorrilla en Valladolid, es el inmueble en el que nació el poeta romántico el 21 de febrero de 1817."
+    },
+	{
+	  "id": 1284878689809,
+	  "nombre": "Universidad de Salamanca",
+	  "descripcion": "La Universidad de Salamanca es la universidad más antigua en operación de España."
+	}
 ]

@@ -52,7 +52,7 @@
 			    <button class="btn btn-success" id="btnSiguientePunto">Ir al Siguiente Punto</button>
 				<form id="guardarRutaForm" action="/rutasRealizadas/guardar" method="POST" style="display: none;">
 				    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-				   <input type="hidden" name="rutaId" id="rutaIdInput" th:value="${ruta.id}" />
+				   	<input type="hidden" name="rutaId" id="rutaIdInput" th:value="${ruta.id}" />
 				    <input type="hidden" name="usuarioId" th:value="${usuario.id}" />
 				    <input type="hidden" name="fecha" id="fechaInput" />
 				    <input type="hidden" name="tiempo" id="tiempoInput" />
@@ -220,7 +220,31 @@
 	                mostrarPuntoActual(puntoActualIndex);
 	            }
 	        };
+			function actualizarPuntoActivo(index) {
+			    const puntos = document.querySelectorAll('.timeline .point');
 
+			    // Eliminar la clase "active" de todos los puntos
+			    puntos.forEach((punto) => {
+			        punto.classList.remove('active');
+			        punto.classList.add('pending');
+			    });
+
+			    // Agregar la clase "active" al punto actual
+			    if (puntos[index]) {
+			        puntos[index].classList.add('active');
+			        puntos[index].classList.remove('pending');
+			    }
+			}
+
+			document.getElementById("btnSiguientePunto").onclick = () => {
+			    if (puntoActualIndex < puntos.length - 1) {
+			        puntoActualIndex++;
+			        mostrarPuntoActual(puntoActualIndex);
+			        actualizarPuntoActivo(puntoActualIndex); // Actualizar dinámicamente el punto activo
+			    }
+			};
+
+			actualizarPuntoActivo(0); // Inicializar el primer punto como activo
 	        // Inicializar los puntos y mostrar el primero
 	        cargarDescripcionesJSON();
 	        mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto al cargar la página

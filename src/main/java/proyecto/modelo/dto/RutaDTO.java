@@ -30,14 +30,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor		  // Constructor vacío
 @AllArgsConstructor       // Constructor con todos los atributos
-@RequiredArgsConstructor  // Constructor sin id
 @Table(name = "ruta")    //  Nombre de la tabla
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class RutaDTO {
-	//Atributos
-
 	/** 
-	 * Identificador único del usuario.
+	 * Identificador único de la ruta.
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)// clave generada automáticamente, autoincremental
@@ -46,7 +43,6 @@ public abstract class RutaDTO {
 	/**
 	 * Nombre de la ruta	
 	 */	
-	@NonNull
 	@Column(nullable = false)
 	private String nombre;
 
@@ -60,17 +56,14 @@ public abstract class RutaDTO {
 	/**
 	 * Distancia en metros
 	 */	
-	@NonNull
 	@Column(nullable = false)
 	private int distancia;
 
-	/**  */
-	@NonNull
+	/** Tipo de ruta ("P" para predeterminada, "U" para usuario) */
 	@Column(nullable = false, length = 1) 
 	private String tipo;
 
-	/**  */
-	@NonNull
+	/** Municipio al que pertenece la ruta */
 	@Column(nullable = false)
 	private String municipio;
 }

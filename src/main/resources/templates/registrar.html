@@ -23,7 +23,7 @@
 		            <span class="far fa-user p-2"></span>
 		            <input type="email" th:field="*{correo}" placeholder="Correo Electrónico" class="">
 		        </div>
-		        <div class="alert alert-danger" th:if="${correoError != null}" th:text="${correoError}"></div>
+		        <div class="menER alert alert-danger" th:if="${correoError != null}" th:text="${correoError}"></div>
 		    </div>
 
 		    <!-- Nombre de Usuario -->
@@ -32,7 +32,7 @@
 		            <span class="fas fa-user p-2"></span>
 		            <input type="text" th:field="*{usuario}" placeholder="Nombre de usuario" class="">
 		        </div>
-		        <div class="alert alert-danger" th:if="${nombreError != null}" th:text="${nombreError}"></div>
+		        <div class="menER alert alert-danger" th:if="${nombreError != null}" th:text="${nombreError}"></div>
 		    </div>
 
 		    <!-- Contraseña -->
@@ -41,7 +41,7 @@
 		            <span class="fas fa-lock p-2"></span>
 		            <input type="password" th:field="*{contrasenia}" placeholder="Contraseña" class="">
 		        </div>
-		        <div class="alert alert-danger" th:if="${contraseniaError != null}" th:text="${contraseniaError}"></div>
+		        <div class="menER alert alert-danger" th:if="${contraseniaError != null}" th:text="${contraseniaError}"></div>
 		    </div>
 
 		    <!-- Botón de registro -->

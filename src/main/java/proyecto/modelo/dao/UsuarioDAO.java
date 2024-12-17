@@ -12,14 +12,5 @@ import proyecto.modelo.dto.UsuarioDTO;
  * @author Paula Ruano
  */
 public interface UsuarioDAO extends JpaRepository<UsuarioDTO, Integer>{
-	 // Método para buscar un usuario por su id
-	/** 
-	 * @return UsuarioDTO
-	 */
-	Optional<UsuarioDTO> findById(int id);
-
-	boolean existsByCorreo(String correo);
-	
-	Optional<UsuarioDTO> findBycorreo(String correo);
-	
+	Optional<UsuarioDTO> findBycorreo(String correo);	
 }

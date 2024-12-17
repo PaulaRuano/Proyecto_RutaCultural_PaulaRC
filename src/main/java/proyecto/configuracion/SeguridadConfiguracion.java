@@ -18,7 +18,7 @@ public class SeguridadConfiguracion {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, AutenticacionExitosa autenticacionExitosa) throws Exception {
 		http
 		.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/login", "/home", "registrar", "/registro", "/api/**", "/listaRutasPredeterminadas", 
+				.requestMatchers("/home","/login", "registrar", "/registro", "/api/**", "/listaRutasPredeterminadas", 
 						"/rutasPreder", "/api/ruta-predeterminada", "/crearRutaUsuario/**","/detalleRuta/**","/css/**", "/json/**", "/js/**", "/img/**")
 				.permitAll() // Permite acceso sin autenticación
 				.requestMatchers("/administradorVista", "/crearRutaPredeterminada","/cerrarSesionAdmin").hasRole("ADMIN") // Acceso solo para administradores

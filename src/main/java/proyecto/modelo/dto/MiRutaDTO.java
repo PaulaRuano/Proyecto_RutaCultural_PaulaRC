@@ -22,19 +22,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MiRutaDTO {
-
+	/** Identificador único de la ruta guardada */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Relación con la tabla ruta (clave foránea) */
     @ManyToOne
     @JoinColumn(nullable = false)
-    private RutaDTO ruta; // Relación con la tabla `ruta`
+    private RutaDTO ruta; 
 
+    /** Relación con la tabla usuario (clave foránea) */
     @ManyToOne
     @JoinColumn( nullable = false)
-    private UsuarioDTO usuario; // Relación con la tabla `usuario`
+    private UsuarioDTO usuario; 
 
+    /** Fecha en la que la ruta predeterminada es añadida a "Mis Rutas" */
     @Column(nullable = false)
-    private LocalDate fecha; // Fecha en la que se añade a "Mis Rutas"
+    private LocalDate fecha; 
 }
