@@ -12,51 +12,48 @@ import lombok.RequiredArgsConstructor;
 import proyecto.modelo.dto.UsuarioDTO;
 
 /**
- * Clase UsuarioDetalles
- *  Implementa la interfaz UserDetails de Spring Security
- * adapta tu clase personalizada UsuarioDTO al formato que entiende Spring Security.
+ * Clase que implementa la interfaz UserDetails de Spring Security
+ * 
+ * Adapta la clase personalizada UsuarioDTO al formato requerido por Spring Security
+ * para gestionar la autenticación y autorización de usuarios en la aplicación
+ * 
  * @author Paula Ruano
  */
-@Getter
+@Getter // Genera automáticamente métodos getter
 @RequiredArgsConstructor
 public class UsuarioDetalles implements UserDetails { //
+	/** 
+	 * Objeto UsuarioDTO que contiene la información del usuario autenticado
+	 */
+	private final UsuarioDTO usuario;
 
-    private final UsuarioDTO usuario;
+	/**
+	 * Devuelve la autoridad (rol) del usuario en formato que entiende Spring Security
+	 * 
+	 * @return Colección con una única autoridad basada en el rol del usuario
+	 */
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {       
+		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().toUpperCase()));
+	}
 
+	/** 
+	 * Devuelve la contraseña del usuario 
+	 * 
+	 * @return La contraseña del usuario
+	 */
+	@Override
+	public String getPassword() {
+		return usuario.getContrasenia();
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Ajustar los roles del usuario
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().toUpperCase()));
-    }
-
-    @Override
-    public String getPassword() {
-        return usuario.getContrasenia();
-    }
-
-    @Override
-    public String getUsername() {
-        return usuario.getCorreo();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	/** 
+	 * Devuelve el nombre de usuario, en este caso el correo electrónico del usuario 
+	 * 
+	 * @return El correo electrónico del usuario como nombre de usuario
+	 */
+	@Override
+	public String getUsername() {
+		return usuario.getCorreo();
+	} 
 }

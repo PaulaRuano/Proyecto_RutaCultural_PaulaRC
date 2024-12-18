@@ -15,29 +15,49 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "mi_ruta")
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * Clase DTO para las rutas predeterminadas que guardan los usuarios
+ * Contiene los atributos de mis rutas
+ * 
+ * @author Paula Ruano
+ */
+@Entity // Clase entidad
+@Getter // Genera automáticamente métodos getter
+@Setter // Genera automáticamente métodos setter
+@Table(name = "mi_ruta") // Nombre de la tabla
+@NoArgsConstructor // Constructor vacío
+@AllArgsConstructor // Constructor con todos los atributos
 public class MiRutaDTO {
-	/** Identificador único de la ruta guardada */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	/** 
+	 * Identificador único de la ruta guardada
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Clave generada automáticamente, autoincremental
+	private Long id;
 
-    /** Relación con la tabla ruta (clave foránea) */
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private RutaDTO ruta; 
+	/**
+	 * Relación con la tabla ruta (clave foránea) 
+	 * 
+	 * @see RutaDTO
+	 */
+	@ManyToOne
+	@JoinColumn(name = "ruta_id", nullable = false)
+	private RutaDTO ruta; 
 
-    /** Relación con la tabla usuario (clave foránea) */
-    @ManyToOne
-    @JoinColumn( nullable = false)
-    private UsuarioDTO usuario; 
+	/** 
+	 * Usuario que guarda la ruta
+	 * Relación con la tabla usuario (clave foránea) 
+	 * 
+	 * @see UsuarioDTO
+	 */
+	@ManyToOne
+	@JoinColumn(name = "usuario_id", nullable = false)
+	private UsuarioDTO usuario; 
 
-    /** Fecha en la que la ruta predeterminada es añadida a "Mis Rutas" */
-    @Column(nullable = false)
-    private LocalDate fecha; 
+	/** 
+	 * Fecha en la que la ruta predeterminada es añadida a "Mis Rutas" 
+	 * No puede ser null
+	 */
+	@Column(nullable = false)
+	private LocalDate fecha; 
 }

@@ -1,8 +1,9 @@
+<!-- VISTA CONFIRMAR CREAR RUTA -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	   <title>Confirmar Ruta</title>
+	<title>Confirmar Ruta</title>
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +14,9 @@
 	   <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
+<!-- Menú de navegación -->
+<div th:insert="~{fragmentos/nav :: nav}"></div>
+
 <div class="container my-5">
     <h1 class="text-center mb-4">Confirmar Ruta</h1>
 
@@ -75,65 +79,77 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script>
-    let map;
-    let directionsService;
-    let directionsRenderer;
-
+    let map;// Mapa de Google Maps
+    let directionsService; // Servicio para calcular rutas
+    let directionsRenderer; // Renderizador para mostrar rutas en el mapa
+	
+	// Función principal para inicializar el mapa
     function initMap() {
-        directionsService = new google.maps.DirectionsService();
-        directionsRenderer = new google.maps.DirectionsRenderer();
-
+        directionsService = new google.maps.DirectionsService(); // Inicializar servicio de rutas
+        directionsRenderer = new google.maps.DirectionsRenderer(); // Inicializar renderizador de rutas
+		
+		// Crear el mapa centrado en Madrid como ejemplo
         map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 40.416775, lng: -3.703790 },
-            zoom: 10
+            center: { lat: 40.416775, lng: -3.703790 }, // Coordenadas de Madrid
+            zoom: 10 // Nivel de zoom inicial
         });
 
-        directionsRenderer.setMap(map);
-
+        directionsRenderer.setMap(map); // Asociar el renderizador al mapa
+ 
+		// Obtener puntos seleccionados del DOM
         const puntos = Array.from(document.querySelectorAll("#sortablePoints li")).map(li => ({
-            id: li.getAttribute("data-id"),
-            name: li.textContent.trim(),
-            lat: parseFloat(li.getAttribute("data-lat")),
-            lng: parseFloat(li.getAttribute("data-lng"))
+            id: li.getAttribute("data-id"), // ID del punto
+            name: li.textContent.trim(), // Nombre del punto
+            lat: parseFloat(li.getAttribute("data-lat")), // Latitud
+            lng: parseFloat(li.getAttribute("data-lng")) // Longitud
         }));
 
-        renderPoints(puntos);
-        calculateRoute(puntos);
+        renderPoints(puntos); // Configurar lista de puntos con funcionalidad de ordenamiento
+        calculateRoute(puntos); // Calcular y mostrar la ruta inicial
     }
-
+	
+	// Configurar funcionalidad de arrastrar y soltar para los puntos
     function renderPoints(puntos) {
         $("#sortablePoints").sortable({
             update: () => {
+				// Obtener IDs en el orden actualizado
                 const sortedIds = $("#sortablePoints").sortable("toArray", { attribute: "data-id" });
-                const reorderedPoints = sortedIds.map(id => puntos.find(p => p.id === id));
-                calculateRoute(reorderedPoints);
+				// Reordenar puntos según los IDs ordenados
+				const reorderedPoints = sortedIds.map(id => puntos.find(p => p.id === id));
+                calculateRoute(reorderedPoints); // Calcular la ruta con el nuevo orden
             }
         });
     }
-
+	
+	// Calcular la ruta entre los puntos seleccionados
     function calculateRoute(puntos) {
-        if (puntos.length < 2) return;
+        if (puntos.length < 2) return; // No calcular si hay menos de 2 puntos
 
+		// Crear puntos intermedios (waypoints) entre origen y destino
         const waypoints = puntos.slice(1, -1).map(point => ({
-            location: new google.maps.LatLng(point.lat, point.lng),
-            stopover: true
+            location: new google.maps.LatLng(point.lat, point.lng), // Coordenadas del punto
+            stopover: true // Indicar que es una parada
         }));
 
+		// Configuración de la solicitud de ruta
         const request = {
-            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
-            destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
-            waypoints, // letras por defecto, se puede personalizar con el objeto  el objeto google.maps.Marker
-            travelMode: google.maps.TravelMode.WALKING
+            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng), // Punto de origen
+            destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),// Punto de destino
+            waypoints, // Puntos intermedios
+            travelMode: google.maps.TravelMode.WALKING  // Modo de transporte (caminando)
         };
-
+		
+		// Enviar la solicitud para calcular la ruta
         directionsService.route(request, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(result);
-
+                directionsRenderer.setDirections(result); // Mostrar la ruta en el mapa
+				
+				// Extraer información de la ruta
                 const route = result.routes[0];
                 const totalDistance = route.legs.reduce((sum, leg) => sum + leg.distance.value, 0) / 1000; // km
                 const totalDuration = route.legs.reduce((sum, leg) => sum + leg.duration.value, 0) / 60; // minutos
 
+				// Actualizar elementos del DOM con distancia y duración
                 document.getElementById("routeDistance").textContent = `${totalDistance.toFixed(2)} km`;
                 document.getElementById("routeDuration").textContent = `${Math.round(totalDuration)} min`;
                 document.getElementById("routeDistanceInput").value = Math.round(totalDistance * 1000); // metros
@@ -141,8 +157,12 @@
             }
         });
     }
-
+	
+	// Esperar a que el DOM esté completamente cargado para inicializar el mapa
     document.addEventListener("DOMContentLoaded", initMap);
 </script>
+
+<!-- Footer -->
+<div th:insert="~{fragmentos/footer :: footer}"></div>
 </body>
 </html>

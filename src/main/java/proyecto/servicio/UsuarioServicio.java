@@ -11,68 +11,58 @@ import proyecto.modelo.dao.UsuarioDAO;
 import proyecto.modelo.dto.UsuarioDTO;
 
 /**
- * Clase servicio para el usuario
- * Contiene los atributos de usuario
+ * Servicio para gestionar la lógica relacionada con los usuarios
  * 
  * @author Paula Ruano
  */
 @Service
 public class UsuarioServicio {
+	// Variables locales de la clase
+	private final UsuarioDAO usuarioDAO;
+	private final PasswordEncoder contraseniaEncriptada;
 
-    private final UsuarioDAO usuarioDAO;
-    private final PasswordEncoder contraseniaEncriptada;
+	// Constructor de la clase
+	@Autowired
+	public UsuarioServicio(UsuarioDAO usuarioDAO, PasswordEncoder contraseniaEncriptada) {
+		this.usuarioDAO = usuarioDAO;
+		this.contraseniaEncriptada = contraseniaEncriptada;
+	}
 
-    @Autowired
-    public UsuarioServicio(UsuarioDAO usuarioDAO, PasswordEncoder contraseniaEncriptada) {
-        this.usuarioDAO = usuarioDAO;
-        this.contraseniaEncriptada = contraseniaEncriptada;
-    }
-    
-    /** 
-     * Método que recibe un usuario y crea un registro en la basde de datos
-	 * @return UsuarioDTO
-	 * @param UsuarioDTO
+	/** 
+	 * Crea un nuevo usuario en la base de datos con rol predeterminado y contraseña encriptada     
+	 * Si el rol no está definido, se asigna el rol predeterminado "cliente"
+	 * 
+	 * @param usuarioDTO Objeto UsuarioDTO con los datos del usuario a crear
+	 * @return UsuarioDTO El objeto del usuario creado y guardado en la base de datos
 	 */
-    @Transactional
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) { 
-    	if (usuarioDTO.getRol() == null || usuarioDTO.getRol().isEmpty()) {
-            usuarioDTO.setRol("cliente"); // Rol predeterminado
-        }
-    	//encriptar contraseña antes de crear el registro
-        usuarioDTO.setContrasenia(contraseniaEncriptada.encode(usuarioDTO.getContrasenia()));
-        UsuarioDTO savedUsuario = usuarioDAO.save(usuarioDTO); //save crea el registro       
-        return savedUsuario; //retorna el objeto registrado
-    }
-    
-    /** 
-     * Método que busca en la base de datos un usuario cuyo correo coincida con el correo pasado como parámetro
-	 * @return Optional<UsuarioDTO>
-	 * @param String correo
-	 */
-    public Optional<UsuarioDTO> buscarPorCorreo(String correo) {    
-        return usuarioDAO.findBycorreo(correo);
-    }
-    
-    /** 
-     * Método que verifica si la contraseña ingresada coincide con la almacenada en la base de datos para un correo específico.
-	 * @return boolean
-	 * @param String correo, String contraseniaIngresada
-	 */
-    public boolean verificarContrasenia(String correo, String contraseniaIngresada) {      
+	@Transactional
+	public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) { 
+		// Verificar que el usuario no tenga un rol asignado
+		if (usuarioDTO.getRol() == null || usuarioDTO.getRol().isEmpty()) {
+			// Asignar el rol predeterminado "cliente" si no tiene rol definido
+			usuarioDTO.setRol("cliente"); 
+		}
 
-        Optional<UsuarioDTO> usuarioOpt = usuarioDAO.findBycorreo(correo);
-        
-        if (usuarioOpt.isPresent()) {
-            UsuarioDTO usuario = usuarioOpt.get();            
-            boolean matches = contraseniaEncriptada.matches(contraseniaIngresada, usuario.getContrasenia());
-                        return matches;
-        } else {
-            System.out.println("Usuario no encontrado con el correo: " + correo);
-        }
-        return false;
-    }
-    
-    public void actualizarUsuario(UsuarioDTO usuario) {
-        usuarioDAO.save(usuario); 
-    }
+		// Encriptar contraseña antes de crear el registro
+		usuarioDTO.setContrasenia(contraseniaEncriptada.encode(usuarioDTO.getContrasenia()));
+
+		// Guardar el usuario en la base de datos
+		UsuarioDTO savedUsuario = usuarioDAO.save(usuarioDTO); //save crea el registro
+
+		// Retornar el objeto del usuario registrado
+		return savedUsuario; 
+	}
+
+	/** 
+	 * Busca un usuario en la base de datos por su correo electrónico
+	 * 
+	 * @param correo Correo electrónico del usuario a buscar
+	 * @return Optional<UsuarioDTO> Un Optional que contiene el usuario encontrado, si existe
+	 * 
+	 * @see RegistrarControlador
+	 */
+	public Optional<UsuarioDTO> buscarPorCorreo(String correo) {  
+		 // Llama al método del DAO para buscar un usuario por su correo electrónico
+		return usuarioDAO.findBycorreo(correo);
+	}
 }

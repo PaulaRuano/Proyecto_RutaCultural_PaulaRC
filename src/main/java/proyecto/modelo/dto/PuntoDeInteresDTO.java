@@ -2,8 +2,6 @@ package proyecto.modelo.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,57 +17,55 @@ import lombok.Setter;
  * 
  * @author Paula Ruano
  */
-@Entity
+@Entity // Clase entidad
 @Getter
 @Setter
-@NoArgsConstructor		  // Constructor vacío
-@AllArgsConstructor       // Constructor con todos los atributos
-@Table(name = "punto_de_interes") //  Nombre de la tabla
+@NoArgsConstructor // Constructor vacío
+@AllArgsConstructor // Constructor con todos los atributos
+@Table(name = "punto_de_interes") // Nombre de la tabla
 public class PuntoDeInteresDTO {
-	//Atributos
-	
 	/** 
 	 * Identificador único del punto de interés
 	 * No puede ser null
 	 */
 	@Id 
 	private Long id;
-	
+
 	/**
 	 * Nombre del organismo del punto de interés
 	 * No puede ser null
 	 */
 	@Column(nullable = false)
 	private String nombreOrganismo;
-	
+
 	/**
 	 * Calle del punto de interés
 	 * No puede ser null
 	 */	
 	@Column(nullable = false)
 	private String calle;
-	
+
 	/**
 	 * Localidad del punto de interés
 	 * No puede ser null
 	 */	
 	@Column(nullable = false)
 	private String localidad;
-	
+
 	/**
 	 * Latitud del punto de interés
 	 * No puede ser null
 	 */	
 	@Column(nullable = false)
 	private Double latitud;
-	
+
 	/**
 	 * Longitud del punto de interés
 	 * No puede ser null
 	 */	
 	@Column(nullable = false)
 	private Double longitud;
-	
+
 	/**
 	 * Categoria del punto de interés
 	 * Relación con la tabla categoria (clave foránea)
@@ -80,5 +76,5 @@ public class PuntoDeInteresDTO {
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
 	private CategoriaDTO categoria;
-	
+
 }

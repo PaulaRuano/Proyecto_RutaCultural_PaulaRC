@@ -13,38 +13,58 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor		  // Constructor vacío
-@AllArgsConstructor       // Constructor con todos los atributos
-@Table(name = "ruta_realizada")    //  Nombre de la tabla
+/**
+ * Clase DTO para las rutas realizadas
+ * Contiene los atributos de las rutas realizadas
+ * 
+ * @author Paula Ruano
+ */
+@Entity // Clase entidad
+@Getter // Genera automáticamente métodos getter
+@Setter // Genera automáticamente métodos setter
+@NoArgsConstructor // Constructor vacío
+@AllArgsConstructor // Constructor con todos los atributos
+@Table(name = "ruta_realizada") // Nombre de la tabla
 public class RutaRealizadaDTO {
-	 /** Identificador único de la ruta realizada */
+	/** 
+	 * Identificador único de la ruta realizada 
+	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Clave generada automáticamente, autoincremental
 	private Long id;
 
-	 /** Relación con la tabla ruta (clave foránea) */
+	/**
+	 * Relación con la tabla ruta (clave foránea) 
+	 * 
+	 * @see RutaDTO
+	 */
 	@ManyToOne
 	@JoinColumn(name = "id_ruta", nullable = false)
 	private RutaDTO ruta; 
 
-	 /**Relación con la tabla usuario (clave foránea) */
+	/**
+	 * Usuario que realiza la ruta
+	 * Relación con la tabla usuario (clave foránea)
+	 * 
+	 * @see UsuarioDTO
+	 */
 	@ManyToOne
 	@JoinColumn(name = "id_usuario", nullable = false)
 	private UsuarioDTO usuario; 
 
-	 /** Fecha en la que se ha terminado la ruta */
+	/**
+	 * Fecha en la que se ha terminado la ruta
+	 * No puede ser null
+	 */
 	@Column(nullable = false)
 	private LocalDate fecha; 
 
-	 /** Tiempo tomado para realizar la ruta en segundos */
-	@NonNull
+	/**
+	 * Tiempo tomado para realizar la ruta en segundos
+	 * No puede ser null
+	 */
 	@Column(nullable = false)
 	private Integer tiempo;
 

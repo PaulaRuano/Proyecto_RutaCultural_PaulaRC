@@ -1,3 +1,4 @@
+/*Estilo generales*/
 *, ::after, ::before {
     box-sizing: border-box;
 }
@@ -9,14 +10,15 @@ body{
 	font-size: calc(1rem + 0.25vw);
 	height: 100%;
 }
-/*Navbar*/
+
+/*Menú navegación*/
 .custom-navbar {
-    background-color: rgb(235, 235, 235); /* Fondo blanco */
-    color: black; /* Fuente negra */
-    border-radius: 8px; /* Bordes redondeados */
-    margin: 15px; /* Espaciado exterior */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    padding: 10px; /* Espaciado interno opcional */
+    background-color: rgb(235, 235, 235); 
+    color: black; 
+    border-radius: 8px; 
+    margin: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    padding: 10px; 
 	text-align: center;
 }
 
@@ -43,13 +45,14 @@ body{
 #navReg >a, #navLogOut > a, #navLog > a{
 	color: rgb(117, 40, 100);
 }
+
 /*Footer*/
 .footer{
 	background-color: lightgrey;
 	padding: 1rem;
 }
 
-/*Página Principal - Inicio*/
+/*Home - Inicio*/
 .homeHero{
 	background-image: url("/img/HeroMobile.png");	
 	background-repeat: no-repeat;
@@ -118,8 +121,7 @@ body{
     object-fit: cover;
    }
 }
-
-/*Párrafo Explora*/
+/*seccion 0 - 2*/
 .tpExplora{
 	color: rgb(219,10,19);
 	font-weight: bold;
@@ -153,7 +155,7 @@ div.pcontainer{
 	margin: 3.3em 2em 3.3em 2em;
 }
 
-/*S1*/
+/*Seccion 1*/
 .sec1{
 	margin-top: 4em;
 	background-color: rgb(117,40,100);
@@ -179,36 +181,36 @@ div.pcontainer{
 	background-color: black;
 }
 
-/*Seción ¿Por Qué Elegirnos?*/
+/*Seción 3 - ¿Por Qué Elegirnos?*/
 .tPE{
 	font-size: calc(1.9rem + 1vw);	
 	margin-top: 1.8em;
 }
 .feature-card {
-      border: 1px solid rgb(117,40,100);
-      border-radius: 10px;
-      padding: 20px;
-      background: rgb(235, 235, 235);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .feature-card h3 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .feature-card p {
-      font-size: 1rem;
-      color: #555;
-    }
-    .feature-card .image-container img {
-      width: 100%;
-      max-height: 100px;
-      object-fit: contain;
-    }	
+    border: 1px solid rgb(117,40,100);
+    border-radius: 10px;
+    padding: 20px;
+    background: rgb(235, 235, 235);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.feature-card h3 {
+   font-size: 1.5rem;
+   font-weight: bold;
+   margin-bottom: 10px;
+}
+.feature-card p {
+   font-size: 1rem;
+   color: #555;
+}
+.feature-card .image-container img {
+   width: 100%;
+   max-height: 100px;
+   object-fit: contain;
+}	
 .feature-card div > p{
 	font-size:  calc(1rem + 0.25vw);	
 }
@@ -220,9 +222,9 @@ div.pcontainer{
       .feature-card {
         flex: 1;
       }
-    }
+}
 
-/*Login y Registrar*/
+/*Formularios Login y Registrar*/
 .wrapper {
     max-width: 500px;
     border-radius: 10px;
@@ -230,14 +232,11 @@ div.pcontainer{
     padding: 30px 40px;
     box-shadow: 10px 10px 40px  black
 }
-
 .h2 {
     font-size: 3.5rem;
     font-weight: bold;
     color: black
 }
-
-
 .input-field {
     border-radius: 5px;
     padding: 5px;
@@ -252,7 +251,6 @@ div.pcontainer{
     color: rgb(128, 128, 128);
     border: 1px solid black
 }
-
 input {
     border: none;
     outline: none;
@@ -261,39 +259,32 @@ input {
     padding: 0px 2px;
     font-family: 'Poppins', sans-serif
 }
-
 .fa-eye-slash.btn {
     border: none;
     outline: none;
     box-shadow: none
 }
-
 a {
     text-decoration: none;
     color: black;
     font-weight: 700
 }
-
 a:hover {
     text-decoration: none;
     color: black
 }
-
 .option {
     position: relative;
     padding-left: 30px;
     cursor: pointer
 }
-
 .option label.text-muted {
     display: block;
     cursor: pointer
 }
-
 .option input {
     display: none
 }
-
 .checkmark {
     position: absolute;
     top: 3px;
@@ -305,11 +296,9 @@ a:hover {
     border-radius: 50%;
     cursor: pointer
 }
-
 .option input:checked~.checkmark:after {
     display: block
 }
-
 .option .checkmark:after {
     content: "";
     width: 13px;
@@ -323,17 +312,14 @@ a:hover {
     transform: translate(-50%, -50%) scale(0);
     transition: 300ms ease-in-out 0s
 }
-
 .option input[type="radio"]:checked~.checkmark {
     background: #fff;
     transition: 300ms ease-in-out 0s;
     border: 1px solid black
 }
-
 .option input[type="radio"]:checked~.checkmark:after {
     transform: translate(-50%, -50%) scale(1)
 }
-
 .btn.btn-block {
     border-radius: 20px;
     background-color: rgb(117,40,100);
@@ -383,8 +369,7 @@ a:hover {
     }
 }
 
-/* Lista Rutas P */
-/* Estilo de la tarjeta */
+/* Lista Rutas Predeterminadas */
 .eRP{
 	margin-bottom: 1em;
 }
@@ -392,15 +377,13 @@ a:hover {
   position: relative;
   margin-bottom: 3.5em; 
   transition: all 0.3s ease;
-  max-width: 400px; /* Establece un ancho máximo para las tarjetas */
-  margin-left: auto; /* Centra las tarjetas horizontalmente */
+  max-width: 400px; /*ancho máximo de las tarjetas */
+  margin-left: auto; 
   margin-right: auto;
 }
-
 .route-card-wrapper:hover {
   transform: scale(1.02); 
 }
-
 .route-card {
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -409,28 +392,23 @@ a:hover {
   display: flex;
   flex-direction: column;
 }
-
 .route-card:hover {
   border: 2px solid rgb(117,40,100);
 }
-
 .route-image img {
   width: 100%;
   height: auto;
 }
-
 .route-details {
   padding: 20px;
   flex: 1;
 }
-
 .route-data {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   margin-top: 10px;
 }
-
 .route-data .data-item {
   flex: 1 1 45%;
   background: #f8f9fa;
@@ -439,18 +417,16 @@ a:hover {
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .route-data .data-item strong {
   display: block;
   font-weight: bold;
 }
-
 .route-card-button {
   position: absolute;
-  bottom: -20px; /* Ajusta la posición del botón */
+  bottom: -20px; 
   left: 50%;
   transform: translateX(-50%);
-  width: 90%; /* Asegura que se alinee con la tarjeta */
+  width: 90%; 
   z-index: 1;
   transition: all 0.3s ease;
 }
@@ -470,8 +446,6 @@ a:hover {
 .route-card-wrapper:hover .route-card-button {
   z-index: 2;
 }
-
-/* Responsive */
 @media (min-width: 1300px) {
   .route-card {
     flex-direction: row;
@@ -508,7 +482,7 @@ a:hover {
   }
 }
 
-/*Detalle rutas pre*/
+/*Detalle rutas*/
 .bi-arrow-bar-left{
 	margin-bottom: 1em;
 }
@@ -522,60 +496,54 @@ a:hover {
     list-style: none;
     padding: 0;
 }
-
 .details-list li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eaeaea;
 }
-
 .details-list li:last-child {
     border-bottom: none;
 }
-
 .points-list {
     margin-top: 2rem;
 }
-/*crear ruta*/
-/*Lista pI*/
+
+/*Crear Rutas*/
 .poi-card {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .poi-image {
-      position: relative;
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .poi-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .poi-image .poi-icon {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background-color: #fff;
-      color: rgb(117, 40, 100);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      font-size: 1.5rem;
-    }
-
-    .poi-details {
-      padding: 20px;
-    }
+.poi-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+.poi-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.poi-image .poi-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #fff;
+    color: rgb(117, 40, 100);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.5rem;
+}
+.poi-details {
+    padding: 20px;
+}
 .cate{
 	font-size: calc(0.9rem + 0.28vw);	
 	margin: 0.2rem 0rem 0rem 0.6rem;
@@ -598,75 +566,72 @@ a:hover {
 .btnS:hover{	
 	background-color: rgb(94, 32, 80);		
 }
-    .poi-data {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .poi-data .data-item {
-      flex: 1 1 100%; /* Mobile-first: ocupa el 100% */
-      background: #f8f9fa;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-align: left;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (min-width: 576px) {
-      .poi-data .data-item {
-        flex: 1 1 calc(50% - 10px); /* Dos columnas en pantallas más grandes */
-      }
-    }
-	.selected-points { min-height: 50px; }
-	   .placeholder-text { color: gray; font-style: italic; }
-	   .poi-card.selected { background-color: #e9fce9; border-color: #4caf50; }
-	   .poi-card.selected .poi-details { background-color: #e9fce9; 
-	}
-	.poi-card.selected .btnS {
-	    background-color: rgb(117, 40, 100);
-	    color: white;
-	    border: none;
-	}
-	   
-/* Mobile-first: ocupa el 100% */
+.poi-data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+.poi-data .data-item {
+    flex: 1 1 100%; 
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+@media (min-width: 576px) {
+   .poi-data .data-item {
+       flex: 1 1 calc(50% - 10px); /* Dos columnas en pantallas más grandes */
+   }
+}
+.selected-points { min-height: 50px; }
+.placeholder-text { color: gray; font-style: italic; }
+.poi-card.selected { background-color: #e9fce9; border-color: #4caf50; }
+.poi-card.selected .poi-details { background-color: #e9fce9; }
+	 
+.poi-card.selected .btnS {
+	 background-color: rgb(117, 40, 100);
+	 color: white;
+	border: none;
+}	 
 .timeline {
-          position: relative;
-          margin: 20px 0;
-      }
-      .timeline .point {
-          display: flex;
-          align-items: center;
-          margin-bottom: 10px;
-      }
-      .timeline .point .circle {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          margin-right: 10px;
-      }
-      .timeline .point.active .circle {
-          background-color: rgb(117,40,100);
-      }
-      .timeline .point.completed .circle {
-          background-color: black;
-      }
-      .timeline .point.pending .circle {
-          background-color: gray;
-      }
-/*Modal*/
+    position: relative;
+    margin: 20px 0;
+}
+.timeline .point {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.timeline .point .circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.timeline .point.active .circle {
+	background-color: rgb(117,40,100);
+}
+.timeline .point.completed .circle {
+	background-color: black;
+}
+.timeline .point.pending .circle {
+	background-color: gray;
+}
+
+/*Modal Confirmación*/
 .modal-content {
-       width: 400px; /* Tamaño del modal */
-       margin: auto; /* Centrar horizontalmente */
-       border-radius: 10px; /* Bordes redondeados */
-       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra alrededor del modal */
+     width: 400px; 
+     margin: auto; 
+     border-radius: 10px; 
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 .modal-body {
-       padding: 20px;	   
+     padding: 20px;	   
 }
 
-/*Administrador*/
+/*Administrador - crear ruta predterminada*/
 .admin h2 {
     font-family: 'Cinzel Decorative', cursive;
     color: #343a40;
@@ -719,21 +684,18 @@ a:hover {
 	border-radius: 0.4rem;
 	padding: 0em 0.2em 0.15em 0.2em;
 }
-
 .icon-trash:hover {
     transform: scale(1.2); 
 }
 /* Rutas Creadas y Guardadas */
 .route-card-wrapper {
     position: relative;
-    margin-bottom: 3.5em; /* espacio entre tarjetas */
+    margin-bottom: 3.5em;
     transition: all 0.3s ease;
 }
-
 .route-card-wrapper:hover {
     transform: scale(1.02); 
 }
-
 .route-card {
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -742,28 +704,23 @@ a:hover {
     display: flex;
     flex-direction: column;
 }
-
 .route-card:hover {
     border: 2px solid rgb(117,40,100);
 }
-
 .route-image img {
     width: 100%;
     height: auto;
 }
-
 .route-details {
     padding: 20px;
     flex: 1;
 }
-
 .route-data {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     margin-top: 10px;
 }
-
 .route-data .data-item {
     flex: 1 1 45%;
     background: #f8f9fa;
@@ -772,33 +729,27 @@ a:hover {
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .route-data .data-item strong {
     display: block;
     font-weight: bold;
 }
-
 .route-card-button {
     position: absolute;
-    bottom: -20px; /* Ajusta la posición del botón */
+    bottom: -20px; 
     left: 50%;
     transform: translateX(-50%);
-    width: 90%; /* Asegura que se alinee con la tarjeta */
+    width: 90%; 
     z-index: 1;
     transition: all 0.3s ease;
 }
-
 .btnGeMR {
     background-color: rgb(117,40,100);
     border: none;
     font-size: calc(1rem + 0.21vw);
 }
-
 .btnGeMR:hover {
     background-color: rgb(97, 33, 83);
 }
-
-/* Botón "Comenzar" */
 .btnCR {
     background-color: rgb(117, 40, 100);
     border: none;
@@ -807,7 +758,6 @@ a:hover {
     text-align: center;
     transition: background-color 0.3s ease;
 }
-
 .btnCR:hover {
     background-color: rgb(97, 33, 83);
     color: #fff;
@@ -820,24 +770,20 @@ a:hover {
     align-items: center;
     margin-bottom: 10px;
 }
-
 .timeline .point .circle {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     margin-right: 10px;
 }
-
+/* Punto activo */
 .timeline .point.active .circle {
-    background-color: rgb(117, 40, 100); /* Punto activo */
+    background-color: rgb(117, 40, 100); 
 }
-
+/* Puntos pendientes */
 .timeline .point.pending .circle {
-    background-color: grey; /* Puntos pendientes */
+    background-color: grey; 
 }
-
 .timeline .point span {
     font-size: 16px;
 }
-
-

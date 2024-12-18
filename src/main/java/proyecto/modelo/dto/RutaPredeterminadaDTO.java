@@ -1,28 +1,31 @@
 package proyecto.modelo.dto;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "ruta_predeterminada")
+/**
+ * Clase DTO para las rutas predeterminadas
+ * Contiene los atributos de las rutas predeterminadas
+ * Hereda de la clase abstracta RutaDTO
+ * 
+ * @author Paula Ruano
+ */
+@Entity // Clase entidad
+@Getter // Genera automáticamente métodos getter
+@Setter // Genera automáticamente métodos setter
+@NoArgsConstructor // Constructor vacío
+@Table(name = "ruta_predeterminada") // Nombre de la tabla
 public class RutaPredeterminadaDTO extends RutaDTO{
-	
-	  public RutaPredeterminadaDTO(String nombre, Double duracion, int distancia, String municipio) {
-	        super(nombre, duracion, distancia, "P", municipio); 
-	    }
-	  public RutaPredeterminadaDTO() {
-	        super(); 
-	    }
+	/** 
+	 * Constructor que inicializa el 'tipo' de la ruta a "P" 
+	 * 
+	 * @see RutaDTO
+	 */
+	public RutaPredeterminadaDTO(String nombre, Double duracion, int distancia, String municipio) {
+		super(nombre, duracion, distancia, "P", municipio); 
+	}
 }

@@ -13,77 +13,103 @@ import proyecto.modelo.dto.UsuarioDTO;
 import proyecto.servicio.UsuarioServicio;
 import proyecto.utiles.Validaciones;
 
+/**
+ * Controlador para gestionar el registro de usuarios
+ * 
+ * Maneja las solicitudes para mostrar el formulario de registro y registrar nuevos usuarios
+ * 
+ * @author Paula Ruano
+ */
 @Controller
 public class RegistrarControlador {
-	   private final UsuarioServicio usuarioServicio;
+	// Variable local
+	private final UsuarioServicio usuarioServicio;
 
-	    @Autowired
-	    public RegistrarControlador(UsuarioServicio usuarioServicio) {
-	        this.usuarioServicio = usuarioServicio;
-	    }
+	// Constructor de la clase
+	@Autowired
+	public RegistrarControlador(UsuarioServicio usuarioServicio) {
+		this.usuarioServicio = usuarioServicio;
+	}
 
-	    @GetMapping("/registrar")
-	    public String mostrarFormularioRegistro(Model model) {
-	        // Añadir un objeto UsuarioDTO vacío al modelo
-	        model.addAttribute("usuarioDTO", new UsuarioDTO());
-	        return "registrar";
-	    }
+	/**
+	 * Muestra el formulario de registro
+	 * 
+	 * @param model Modelo para pasar datos a la vista
+	 * @return Nombre de la plantilla de la vista para el formulario de registro
+	 */
+	@GetMapping("/registrar")
+	public String mostrarFormularioRegistro(Model model) {
+		// Añadir un objeto UsuarioDTO vacío al modelo para enlazar con el formulario
+		model.addAttribute("usuarioDTO", new UsuarioDTO());
+		return "registrar";
+	}
 
-	    @PostMapping("/registro")
-	    public String registrarUsuario(
-	            @ModelAttribute UsuarioDTO usuarioDTO,
-	            Model model,
-	            HttpSession session) { // Agregar HttpSession como parámetro
+	/**
+	 * Maneja el registro de un nuevo usuario
+	 * 
+	 * Valida los datos ingresados por el usuario, verifica que el correo no esté ya registrado
+	 * y crea un nuevo usuario si todas las validaciones pasan
+	 * 
+	 * @param usuarioDTO Objeto con los datos del usuario a registrar
+	 * @param model Modelo para pasar datos a la vista
+	 * @param session Sesión HTTP actual para invalidar si existe
+	 * @return Redirección al login o vuelta al formulario si hay errores
+	 */
+	@PostMapping("/registro")
+	public String registrarUsuario(
+			@ModelAttribute UsuarioDTO usuarioDTO,
+			Model model,
+			HttpSession session) {
 
-	        boolean hasErrors = false;
+		boolean tieneErrores = false;
 
-	        // Validar que el nombre no esté vacío
-	        if (!Validaciones.validarNoVacio(usuarioDTO.getUsuario())) {
-	            model.addAttribute("nombreError", "El nombre es obligatorio.");
-	            hasErrors = true;
-	        }
+		// Validar el nombre de usuario
+		if (!Validaciones.validarNoVacio(usuarioDTO.getUsuario())) {
+			model.addAttribute("nombreError", "El nombre es obligatorio.");
+			tieneErrores = true;
+		}
 
-	        // Validar que el correo no esté vacío y tenga un formato válido
-	        if (!Validaciones.validarNoVacio(usuarioDTO.getCorreo())) {
-	            model.addAttribute("correoError", "El correo es obligatorio.");
-	            hasErrors = true;
-	        } else if (!Validaciones.esFormatoCorreoValido(usuarioDTO.getCorreo())) {
-	            model.addAttribute("correoError", "El correo no tiene un formato válido.");
-	            hasErrors = true;
-	        }
+		// Validar el correo electrónico
+		if (!Validaciones.validarNoVacio(usuarioDTO.getCorreo())) {
+			model.addAttribute("correoError", "El correo es obligatorio.");
+			tieneErrores = true;
+		} else if (!Validaciones.esFormatoCorreoValido(usuarioDTO.getCorreo())) {
+			model.addAttribute("correoError", "El correo no tiene un formato válido.");
+			tieneErrores = true;
+		}
 
-	        // Validar que la contraseña no esté vacía y tenga al menos 6 caracteres
-	        if (!Validaciones.validarNoVacio(usuarioDTO.getContrasenia())) {
-	            model.addAttribute("contraseniaError", "La contraseña es obligatoria.");
-	            hasErrors = true;
-	        } else if (!Validaciones.validarLongitud(usuarioDTO.getContrasenia(), 6, 255)) {
-	            model.addAttribute("contraseniaError", "La contraseña debe tener al menos 6 caracteres.");
-	            hasErrors = true;
-	        }
+		// Validar la contraseña 
+		if (!Validaciones.validarNoVacio(usuarioDTO.getContrasenia())) {
+			model.addAttribute("contraseniaError", "La contraseña es obligatoria.");
+			tieneErrores = true;
+		} else if (!Validaciones.validarLongitud(usuarioDTO.getContrasenia(), 6, 255)) {
+			model.addAttribute("contraseniaError", "La contraseña debe tener al menos 6 caracteres.");
+			tieneErrores = true;
+		}
 
-	        // Validar si el correo ya está registrado
-	        if (usuarioServicio.buscarPorCorreo(usuarioDTO.getCorreo()).isPresent()) {
-	            model.addAttribute("correoError", "El correo ya está registrado.");
-	            hasErrors = true;
-	        }
+		// Verificar si el correo ya está registrado
+		if (usuarioServicio.buscarPorCorreo(usuarioDTO.getCorreo()).isPresent()) {
+			model.addAttribute("correoError", "El correo ya está registrado.");
+			tieneErrores = true;
+		}
 
-	        // Si hay errores, volver al formulario con los mensajes de error
-	        if (hasErrors) {
-	            return "registrar";
-	        }
+		// Si hay errores, volver al formulario de registro
+		if (tieneErrores) {
+			return "registrar";
+		}
 
-	        // Invalida la sesión si existe (destruir la sesión del usuario logueado)
-	        if (session != null) {
-	            session.invalidate();
-	        }
+		// Invalidar la sesión si existe
+		if (session != null) {
+			session.invalidate();
+		}
 
-	        // Establecer el rol 'cliente' por defecto
-	        usuarioDTO.setRol("cliente");
+		// Asignar rol predeterminado al usuario
+		usuarioDTO.setRol("cliente");
 
-	        // Crear usuario si todo es válido
-	        usuarioServicio.crearUsuario(usuarioDTO);
+		// Crear el usuario
+		usuarioServicio.crearUsuario(usuarioDTO);
 
-	        // Redirigir al login después del registro
-	        return "redirect:/login";
-	    }
+		// Redirigir al login después del registro exitoso
+		return "redirect:/login";
+	}
 }

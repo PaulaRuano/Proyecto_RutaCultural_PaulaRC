@@ -6,23 +6,25 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import proyecto.modelo.dao.PuntoDeInteresDAO;
 import proyecto.modelo.dto.CategoriaDTO;
 import proyecto.modelo.dto.PuntoDeInteresDTO;
 import proyecto.utiles.Parsear;
 
+/**
+ * Servicio para gestionar la lógica relacionada con los puntos de interés
+ * 
+ * @author Paula Ruano
+ */
 @Service
-@Slf4j  // Añadido para mejor logging
 public class PuntoDeInteresServicio {
-
+	// Variable local de la clase
 	private static final String API_URL = "https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-infraestructuras-culturales/records";
 
 	private final RestTemplate restTemplate;
@@ -30,6 +32,7 @@ public class PuntoDeInteresServicio {
 	private final CategoriaServicio categoriaServicio;
 	private final PuntoDeInteresDAO puntoDeInteresDAO;
 
+	// Constructor de la clase
 	public PuntoDeInteresServicio(RestTemplate restTemplate, ObjectMapper objectMapper, CategoriaServicio categoriaServicio, PuntoDeInteresDAO puntoDeInteresDAO) {
 		this.restTemplate = restTemplate;
 		this.objectMapper = objectMapper;
@@ -37,48 +40,15 @@ public class PuntoDeInteresServicio {
 		this.puntoDeInteresDAO = puntoDeInteresDAO;
 	}
 
-	public List<PuntoDeInteresDTO> obtenerPuntosDeInteres() {
-		List<PuntoDeInteresDTO> puntosDeInteres = new ArrayList<>();
-		try {
-			String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-					.queryParam("limit", 20)
-					.build()
-					.toUriString();
-			log.info("URL generada para la solicitud: {}", url);
-
-			String response = restTemplate.getForObject(url, String.class);
-			JsonNode rootNode = objectMapper.readTree(response);
-			JsonNode results = rootNode.path("results");
-
-			if (results.isMissingNode() || !results.isArray()) {
-				log.error("El nodo 'results' no existe o no es un array.");
-				throw new RuntimeException("La respuesta de la API no contiene datos en 'results'.");
-			}
-
-			for (JsonNode record : results) {
-				try {
-					// Filtrar registros con calle vacía o null
-					String calle = record.path("calle").asText("");
-					if (calle == null || calle.isEmpty()) {
-						log.warn("Registro excluido por calle vacía o null: {}", record);
-						continue;
-					}
-
-					PuntoDeInteresDTO punto = mapearCampos(record);
-					puntosDeInteres.add(punto);
-				} catch (Exception e) {
-					log.error("Error al procesar registro: {}", e.getMessage());
-				}
-			}
-		} catch (Exception e) {
-			log.error("Error al obtener puntos de interés: {}", e.getMessage());
-			throw new RuntimeException("Error al obtener puntos de interés", e);
-		}
-		return puntosDeInteres;
-	}
-
+	 /**
+     * Mapea los campos de un registro JSON a un objeto PuntoDeInteresDTO
+     * 
+     * Este método se utiliza en el método obtenerPuntoPorIdDesdeAPI de esta misma clase
+     * 
+     * @param record Nodo JSON con los datos del registro
+     * @return PuntoDeInteresDTO con los datos mapeados
+     */
 	private PuntoDeInteresDTO mapearCampos(JsonNode record) {
-		log.info("Procesando registro: {}", record);
 
 		String nombreOrganismo = record.path("nombre_del_organismo").asText("");
 		Long id = Parsear.parseLong(record.path("identificador").asText(""));
@@ -87,10 +57,8 @@ public class PuntoDeInteresServicio {
 		Double latitud = Parsear.parseDouble(record.path("latitud").asText());
 		Double longitud =Parsear.parseDouble(record.path("longitud").asText());
 
-		// Obtener categoría desde el servicio
-		CategoriaDTO categoria = categoriaServicio.obtenerCategoriaPorNombre(nombreOrganismo);
-
-		log.info("Categoría asignada: {}", categoria.getNombreCategoria());
+		// Obtener la categoría según el nombre del organismo
+		CategoriaDTO categoria = categoriaServicio.obtenerCategoriaPorNombre(nombreOrganismo);	
 
 		return new PuntoDeInteresDTO(
 				id,
@@ -102,47 +70,111 @@ public class PuntoDeInteresServicio {
 				categoria
 				);
 	}
-
-
-	public List<PuntoDeInteresDTO> obtenerPuntosPorIds(List<Long> ids) {
-		List<PuntoDeInteresDTO> puntosFiltrados = new ArrayList<>();
+	
+	/**
+	 * Obtiene un punto de interés específico desde la API externa utilizando su ID
+	 * 
+	 * Este método se utiliza en el método obtenerOCrearPuntosDeInteres de esta misma clase
+	 * 
+	 * @param id ID del punto de interés a buscar
+	 * @return PuntoDeInteresDTO con los datos obtenidos de la API, o null si no se encuentra
+	 * @throws RuntimeException Si ocurre un error durante la solicitud a la API
+	 */
+	private PuntoDeInteresDTO obtenerPuntoPorIdDesdeAPI(Long id) {
 		try {
-			for (Long id : ids) {
-				try {
-					PuntoDeInteresDTO punto = obtenerPuntoPorId(id);
-					if (punto != null) {
-						puntosFiltrados.add(punto);
-					}
-				} catch (Exception e) {
-					log.warn("Error al obtener el punto con ID {}: {}", id, e.getMessage());
-				}
-			}
-		} catch (Exception e) {
-			log.error("Error en obtenerPuntosPorIds: {}", e.getMessage(), e);
-			throw e;
-		}
-		return puntosFiltrados;
-	}
-
-	public PuntoDeInteresDTO obtenerPuntoPorId(Long id) {
-		try {
+			// Construir la URL con el filtro por ID
 			String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-					.queryParam("where", "identificador=" + id) // Ajusta según la API
+					.queryParam("where", "identificador=" + id) // Filtrar por identificador
 					.build()
 					.toUriString();
+			
+			// Realizar la solicitud a la API
+			String response = restTemplate.getForObject(url, String.class);
+			JsonNode rootNode = objectMapper.readTree(response);
+			JsonNode results = rootNode.path("results");
+			
+			// Verificar si se encontraron resultados y mapear el primer registro
+			if (results.isArray() && results.size() > 0) {
+				JsonNode record = results.get(0);
+				return mapearCampos(record);
+			}
+		} catch (Exception e) {
+			// Capturar y propagar cualquier error
+			throw new RuntimeException("Error al obtener el punto con ID " + id + " desde la API: " + e.getMessage());
+		}
+		// Retornar null si no se encuentra el punto
+		return null;
+	}	
 
-			log.info("Solicitando punto de interés con URL: {}", url);
+	/**
+	 * Obtiene puntos de interés desde la base de datos o los crea si no existen, 
+	 * obteniéndolos desde la API externa
+	 * 
+	 * @param ids Lista de IDs de puntos de interés
+	 * @return Lista de puntos de interés procesados
+	 * 
+	 * @see CrearRutaPredeterminadaControlador
+	 * @see ConfirmarRutaUsuarioControlador
+	 */
+	public List<PuntoDeInteresDTO> obtenerOCrearPuntosDeInteres(List<Long> ids) {
+		List<PuntoDeInteresDTO> puntosProcesados = new ArrayList<>();
+
+		for (Long id : ids) {
+			try {
+				// Buscar en la base de datos
+				PuntoDeInteresDTO existente = puntoDeInteresDAO.findById(id).orElse(null);
+
+				if (existente != null) {
+					 // Si existe, añadir a la lista de resultados
+					puntosProcesados.add(existente);
+				} else {
+					// Si no existe en la base de datos, buscar en la API
+					PuntoDeInteresDTO nuevoPunto = obtenerPuntoPorIdDesdeAPI(id);
+					if (nuevoPunto != null) {
+						// Guardar el nuevo punto en la base de datos
+						puntoDeInteresDAO.save(nuevoPunto); 
+						puntosProcesados.add(nuevoPunto);
+					} else {
+						throw new IllegalArgumentException("El punto de interés con ID " + id + " no existe ni en la API.");
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Error al procesar el punto de interés con ID " + id + ": " + e.getMessage());
+			}
+		}
+		return puntosProcesados;
+	}
+	
+	/**
+	 * Obtiene un punto de interés específico desde la API externa utilizando su ID
+	 * 
+	 * Realiza una solicitud HTTP a la API con el identificador como parámetro y mapea 
+	 * los campos obtenidos en un objeto `PuntoDeInteresDTO`. Si no se encuentra el punto 
+	 * o si ocurre un error, retorna null
+	 * 
+	 * Este método se utiliza en el método obtenerPuntosPorIds de esta misma clase
+	 * 
+	 * @param id ID del punto de interés a buscar
+	 * @return PuntoDeInteresDTO con los datos obtenidos de la API, o null si no existe
+	 */
+	public PuntoDeInteresDTO obtenerPuntoPorId(Long id) {
+		try {
+			// Construir la URL con el filtro por identificador
+			String url = UriComponentsBuilder.fromHttpUrl(API_URL)
+					.queryParam("where", "identificador=" + id) // Filtrar por ID en la API
+					.build()
+					.toUriString();
+			
+			// Realizar la solicitud GET a la API
 			String response = restTemplate.getForObject(url, String.class);
 
-			log.info("Respuesta de la API: {}", response);
-
+			// Parsear la respuesta JSON
 			JsonNode rootNode = objectMapper.readTree(response);
 			JsonNode results = rootNode.path("results");
 
+	        // Verificar si se encontraron resultados
 			if (results.isArray() && results.size() > 0) {
-				JsonNode record = results.get(0); // Solo el primer resultado
-
-				log.info("Datos del registro: {}", record);
+				JsonNode record = results.get(0); // Obtener el primer registro del array
 
 				// Extraer campos directamente del nodo "record"
 				Long identificador = Parsear.parseLong(record.path("identificador").asText(""));
@@ -152,12 +184,10 @@ public class PuntoDeInteresServicio {
 				Double latitud = Parsear.parseDouble(record.path("latitud").asText(""));
 				Double longitud = Parsear.parseDouble(record.path("longitud").asText(""));
 
+				// Obtener la categoría desde el servicio de categorías
 				CategoriaDTO categoria = categoriaServicio.obtenerCategoriaPorNombre(nombreOrganismo);
-				log.info("Contenido del nodo record: {}", record.toPrettyString());
-				log.info("Datos extraídos - ID: {}, Nombre: {}, Calle: {}, Latitud: {}, Longitud: {}", 
-						identificador, nombreOrganismo, calle, latitud, longitud);
 
-				// Crear y retornar el DTO con la categoría asignada
+				 // Crear y retornar el objeto PuntoDeInteresDTO
 				return new PuntoDeInteresDTO(
 						identificador,
 						nombreOrganismo,
@@ -168,226 +198,207 @@ public class PuntoDeInteresServicio {
 						categoria
 						);
 			} else {
-				log.warn("No se encontraron resultados para el ID: {}", id);
+
+				 // Retornar null si no se encontraron resultados
 				return null;
 			}
 		} catch (Exception e) {
-			log.error("Error al obtener punto de interés con ID {}: {}", id, e.getMessage());
+			 // Capturar cualquier error durante la ejecución y retornar null
 			return null;
 		}
 	}
-	
-	public PuntoDeInteresDTO guardarPuntoDeInteres(PuntoDeInteresDTO punto) {
-		return puntoDeInteresDAO.save(punto); // Persistir en la base de datos
+
+	/**
+	 * Obtiene una lista de puntos de interés desde la API externa usando una lista de IDs
+	 * 
+	 * @param ids Lista de IDs de puntos de interés a buscar
+	 * @return Lista de puntos de interés encontrados
+	 * 
+	 * @see ConfirmarRutaUsuarioControlador
+	 */
+	public List<PuntoDeInteresDTO> obtenerPuntosPorIds(List<Long> ids) {
+		List<PuntoDeInteresDTO> puntosFiltrados = new ArrayList<>();
+		try {
+			for (Long id : ids) {
+				try {
+					// Obtener punto de interés por ID desde la API
+					PuntoDeInteresDTO punto = obtenerPuntoPorId(id);
+					if (punto != null) {
+						puntosFiltrados.add(punto);
+					}
+				} catch (Exception e) {
+					 throw e;
+				}
+			}
+		} catch (Exception e) {
+			// Propagar una excepción si ocurre un error 
+			throw e;
+		}
+		return puntosFiltrados;
 	}
 
+    /**
+     * Obtiene puntos de interés desde la base de datos por una lista de IDs
+     * 
+     * @param ids Lista de IDs de puntos de interés
+     * @return Lista de puntos de interés filtrados
+     * @throws IllegalArgumentException Si un punto de interés no existe en la base de datos
+     * 
+     * @see DetalleRutaControlador
+     * @see HacerRuta Controlador
+     * @see RutaPredeterminadaControlador
+     */
 	public List<PuntoDeInteresDTO> obtenerPuntosPorIdsDesdeBBDD(List<Long> ids) {
-	    List<PuntoDeInteresDTO> puntosFiltrados = new ArrayList<>();
-	    for (Long id : ids) {
-	        PuntoDeInteresDTO punto = puntoDeInteresDAO.findById(id)
-	                .orElseThrow(() -> new IllegalArgumentException("El punto de interés con ID " + id + " no existe en la base de datos."));
-	        puntosFiltrados.add(punto);
-	    }
-	    return puntosFiltrados;
+		List<PuntoDeInteresDTO> puntosFiltrados = new ArrayList<>();
+		 // Buscar cada punto por su ID en la base de datos
+		for (Long id : ids) {
+			PuntoDeInteresDTO punto = puntoDeInteresDAO.findById(id)
+					.orElseThrow(() -> new IllegalArgumentException("El punto de interés con ID " + id + " no existe en la base de datos."));
+			puntosFiltrados.add(punto);
+		}
+		
+		return puntosFiltrados;
 	}
 
-	public List<PuntoDeInteresDTO> obtenerOCrearPuntosDeInteres(List<Long> ids) {
-	    List<PuntoDeInteresDTO> puntosProcesados = new ArrayList<>();
-
-	    for (Long id : ids) {
-	        try {
-	            PuntoDeInteresDTO existente = puntoDeInteresDAO.findById(id)
-	                .orElse(null);
-
-	            if (existente != null) {
-	                puntosProcesados.add(existente);
-	            } else {
-	                // Si no existe en la base de datos, buscar en la API
-	                PuntoDeInteresDTO nuevoPunto = obtenerPuntoPorIdDesdeAPI(id);
-	                if (nuevoPunto != null) {
-	                    puntoDeInteresDAO.save(nuevoPunto); // Guardar en la base de datos
-	                    puntosProcesados.add(nuevoPunto);
-	                } else {
-	                    throw new IllegalArgumentException("El punto de interés con ID " + id + " no existe ni en la API.");
-	                }
-	            }
-	        } catch (Exception e) {
-	            throw new RuntimeException("Error al procesar el punto de interés con ID " + id + ": " + e.getMessage());
-	        }
-	    }
-	    return puntosProcesados;
-	}
-
-	private PuntoDeInteresDTO obtenerPuntoPorIdDesdeAPI(Long id) {
-	    try {
-	        String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-	            .queryParam("where", "identificador=" + id) // Ajusta según la API
-	            .build()
-	            .toUriString();
-
-	        String response = restTemplate.getForObject(url, String.class);
-	        JsonNode rootNode = objectMapper.readTree(response);
-	        JsonNode results = rootNode.path("results");
-
-	        if (results.isArray() && results.size() > 0) {
-	            JsonNode record = results.get(0);
-	            return mapearCampos(record);
-	        }
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error al obtener el punto con ID " + id + " desde la API: " + e.getMessage());
-	    }
-	    return null;
-	}
-
-
-	
+	/**
+	 * Obtiene puntos de interés desde la API externa de manera paginada
+	 * 
+	 * @param page Número de la página
+	 * @param pageSize Tamaño de la página (cantidad de registros)
+	 * @return Lista de puntos de interés obtenidos desde la API
+	 * 
+	 * @see RutaUsuarioControlador
+	 */
 	public List<PuntoDeInteresDTO> obtenerPuntosDeInteresPaginados(int page, int pageSize) {
-	    try {
-	        String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-	                .queryParam("offset", page * pageSize)
-	                .queryParam("limit", pageSize)
-	                .build()
-	                .toUriString();
+		try {
+			 // Construir la URL con paginación
+			String url = UriComponentsBuilder.fromHttpUrl(API_URL)
+					.queryParam("offset", page * pageSize)
+					.queryParam("limit", pageSize)
+					.build()
+					.toUriString();
 
-	        String response = restTemplate.getForObject(url, String.class);
-	        JsonNode rootNode = objectMapper.readTree(response);
-	        JsonNode results = rootNode.path("results");
+			String response = restTemplate.getForObject(url, String.class);
+			JsonNode rootNode = objectMapper.readTree(response);
+			JsonNode results = rootNode.path("results");
 
-	        if (!results.isArray()) {
-	            return Collections.emptyList();
-	        }
+			if (!results.isArray()) {
+				return Collections.emptyList();
+			}
 
-	        List<PuntoDeInteresDTO> puntos = new ArrayList<>();
-	        int excludedCount = 0; // Contador de puntos excluidos
-	        for (JsonNode record : results) {
-	            if (!record.path("calle").asText("").isEmpty()) {
-	                puntos.add(mapearCampos(record));
-	            } else {
-	                excludedCount++;
-	            }
-	        }
-
-	        log.debug("Puntos incluidos: {}", puntos.size());
-	        log.debug("Puntos excluidos (sin calle): {}", excludedCount);
-	        return puntos;
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error al obtener puntos paginados", e);
-	    }
+			List<PuntoDeInteresDTO> puntos = new ArrayList<>();
+			int contadorExcluidos = 0; // Contador de puntos excluidos
+			for (JsonNode record : results) {
+				  // Filtrar registros con calle válida
+				if (!record.path("calle").asText("").isEmpty()) {
+					puntos.add(mapearCampos(record));
+				} else {
+					contadorExcluidos++;
+				}
+			}
+			return puntos;
+		} catch (Exception e) {
+			throw new RuntimeException("Error al obtener puntos paginados", e);
+		}
 	}
-	
-	public List<PuntoDeInteresDTO> obtenerPuntosPorMunicipio(String municipio, int page, int pageSize) {
-	    try {
-	        int offset = page * pageSize; // Calcula el desplazamiento
-	        String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-	                .queryParam("where", "localidad='" + municipio + "'") // Filtro por municipio
-	                .queryParam("offset", offset) // Paginación
-	                .queryParam("limit", pageSize) // Límite de resultados
-	                .build()
-	                .toUriString();
 
-	        String response = restTemplate.getForObject(url, String.class);
-	        JsonNode rootNode = objectMapper.readTree(response);
-	        JsonNode results = rootNode.path("results");
-
-	        if (!results.isArray() || results.isEmpty()) {
-	            return Collections.emptyList();
-	        }
-
-	        List<PuntoDeInteresDTO> puntos = new ArrayList<>();
-	        for (JsonNode record : results) {
-	            if (!record.path("calle").asText("").isEmpty()) { // Filtrar por puntos con calle válida
-	                puntos.add(mapearCampos(record));
-	            }
-	        }
-	        return puntos;
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error al obtener puntos por municipio", e);
-	    }
-	}
-	
+	/**
+	 * Obtiene una lista de municipios cuyos nombres comienzan con un prefijo específico
+	 * 
+	 * Realiza una búsqueda paginada en la API externa y filtra los resultados según el prefijo
+	 * 
+	 * @param prefijo Prefijo con el que deben comenzar los nombres de los municipios
+	 * @return Lista de nombres de municipios ordenada alfabéticamente y sin duplicados
+	 * @throws RuntimeException Si ocurre un error durante la solicitud a la API
+	 * 
+	 * @see PuntoDeInteresControlador
+	 */
 	public List<String> obtenerMunicipiosPorPrefijo(String prefijo) {
-	    try {
-	        log.info("Buscando municipios con prefijo: '{}'", prefijo);
+		try {	       
 
-	        Set<String> municipios = new TreeSet<>(); // Evitar duplicados
-	        int offset = 0; // Desplazamiento inicial
-	        int limit = 100; // Límite de resultados por página
-	        boolean hayMasDatos = true;
+			Set<String> municipios = new TreeSet<>(); // Evitar duplicados
+			int offset = 0; // Desplazamiento inicial
+			int limit = 100; // Límite de resultados por página
+			boolean hayMasDatos = true;
 
-	        while (hayMasDatos) {
-	            String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-	                    .queryParam("limit", limit)
-	                    .queryParam("offset", offset) // Paginación
-	                    .build()
-	                    .toUriString();
+			while (hayMasDatos) {
+				String url = UriComponentsBuilder.fromHttpUrl(API_URL)
+						.queryParam("limit", limit)
+						.queryParam("offset", offset) // Paginación
+						.build()
+						.toUriString();
 
-	            String response = restTemplate.getForObject(url, String.class);
-	            JsonNode rootNode = objectMapper.readTree(response);
-	            JsonNode results = rootNode.path("results");
+				String response = restTemplate.getForObject(url, String.class);
+				JsonNode rootNode = objectMapper.readTree(response);
+				JsonNode results = rootNode.path("results");
 
-	            if (!results.isArray() || results.isEmpty()) {
-	                log.warn("No hay más resultados en la página actual.");
-	                break; // Finaliza si no hay más resultados
-	            }
+				if (!results.isArray() || results.isEmpty()) {	               
+					break; // Finaliza si no hay más resultados
+				}
 
-	            for (JsonNode record : results) {
-	                String localidad = record.path("localidad").asText("");
-	                log.info("Municipio encontrado en datos sin filtrar: '{}'", localidad);
-	                if (!localidad.isEmpty() && localidad.toLowerCase().startsWith(prefijo.trim().toLowerCase())) {
-	                    municipios.add(localidad);
-	                }
-	            }
+				for (JsonNode record : results) {
+					String localidad = record.path("localidad").asText("");	                
+					if (!localidad.isEmpty() && localidad.toLowerCase().startsWith(prefijo.trim().toLowerCase())) {
+						municipios.add(localidad);
+					}
+				}
 
-	            offset += limit; // Incrementa el offset para la siguiente página
-	            hayMasDatos = results.size() == limit; // Si se devolvieron menos de 'limit', no hay más datos
-	        }
+				offset += limit; // Incrementa el offset para la siguiente página
+				hayMasDatos = results.size() == limit; // Si se devolvieron menos de 'limit', no hay más datos
+			}
 
-	        log.info("Municipios filtrados: {}", municipios);
-	        return new ArrayList<>(municipios);
+			return new ArrayList<>(municipios);
 
-	    } catch (Exception e) {
-	        log.error("Error al obtener municipios por prefijo: ", e);
-	        throw new RuntimeException("Error al obtener municipios por prefijo", e);
-	    }
+		} catch (Exception e) {	        
+			throw new RuntimeException("Error al obtener municipios por prefijo", e);
+		}
 	}
 	
+	/**
+	 * Obtiene puntos de interés filtrados por municipio de manera paginada.
+	 * 
+	 * @param municipio Municipio por el que se filtrarán los puntos de interés
+	 * @param page Número de la página
+	 * @param pageSize Tamaño de la página (número de registros por página)
+	 * @return Lista de puntos de interés obtenidos desde la API externa
+	 * @throws RuntimeException Si ocurre un error durante la solicitud a la API
+	 * 
+	 * @see PuntoDeInteresControlador
+	 */
 	public List<PuntoDeInteresDTO> obtenerPuntosDeInteresPorMunicipioPaginados(String municipio, int page, int pageSize) {
-	    try {
-	        String url = UriComponentsBuilder.fromHttpUrl(API_URL)
-	                .queryParam("where", "localidad='" + municipio + "'")
-	                .queryParam("offset", page * pageSize)
-	                .queryParam("limit", pageSize)
-	                .build()
-	                .toUriString();
+		try {
+			// Construir la URL con el filtro por municipio y paginación
+			String url = UriComponentsBuilder.fromHttpUrl(API_URL)
+					.queryParam("where", "localidad='" + municipio + "'")
+					.queryParam("offset", page * pageSize)
+					.queryParam("limit", pageSize)
+					.build()
+					.toUriString();	 
+			
+			// Realizar la solicitud a la API
+			String response = restTemplate.getForObject(url, String.class);
+			JsonNode rootNode = objectMapper.readTree(response);
+			JsonNode results = rootNode.path("results");
 
-	        log.info("URL generada para paginación por municipio: {}", url);
+			if (!results.isArray()) {
+				// Retornar lista vacía si no hay resultados
+				return Collections.emptyList();
+			}
 
-	        String response = restTemplate.getForObject(url, String.class);
-	        JsonNode rootNode = objectMapper.readTree(response);
-	        JsonNode results = rootNode.path("results");
+			List<PuntoDeInteresDTO> puntos = new ArrayList<>();
+			int contadorExcluidos = 0; // Contador de puntos excluidos
+			for (JsonNode record : results) {
+				 // Filtrar puntos con calle válida
+				if (!record.path("calle").asText("").isEmpty()) {
+					puntos.add(mapearCampos(record));
+				} else {
+					contadorExcluidos++;
+				}
+			}
 
-	        if (!results.isArray()) {
-	            return Collections.emptyList();
-	        }
-
-	        List<PuntoDeInteresDTO> puntos = new ArrayList<>();
-	        int excludedCount = 0; // Contador de puntos excluidos
-	        for (JsonNode record : results) {
-	            if (!record.path("calle").asText("").isEmpty()) {
-	                puntos.add(mapearCampos(record));
-	            } else {
-	                excludedCount++;
-	            }
-	        }
-
-	        log.debug("Puntos incluidos: {}", puntos.size());
-	        log.debug("Puntos excluidos (sin calle): {}", excludedCount);
-	        return puntos;
-	    } catch (Exception e) {
-	        log.error("Error al obtener puntos paginados por municipio: ", e);
-	        throw new RuntimeException("Error al obtener puntos paginados por municipio", e);
-	    }
-	}
-
-
+			return puntos;
+		} catch (Exception e) {	        
+			throw new RuntimeException("Error al obtener puntos paginados por municipio", e);
+		}
+	}	
 }

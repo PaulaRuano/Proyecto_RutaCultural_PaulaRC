@@ -1,8 +1,9 @@
+<!-- VISTA DETALLE RUTA PREDETERMINADA -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio</title>
+    <title>Detalle Ruta Predeterminada</title>
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,12 +14,12 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-    <!-- Barra de navegación -->
+    <!-- Menú de navegación -->
     <div th:insert="~{fragmentos/nav :: nav}"></div>
 
     <!-- Contenido principal -->
-
 	<main class="container my-5">
+		<!-- Enlace volver atrás -->
 		<a th:href="@{/{origen}(origen=${origen})}" class="back-button">
 		    &larr; Volver a la lista
 		</a>
@@ -53,30 +54,43 @@
 
     <!-- Script para cargar la descripción -->
     <script>
+		// Obtener el ID de la ruta desde la plantilla Thymeleaf
         const rutaId = '[[${ruta.id}]]';
-
+		
+		// Función para cargar la descripción de la ruta
         async function cargarDescripcionRuta() {
             try {
+				// Realiza una solicitud a un archivo JSON local con las descripciones de rutas
                 const response = await fetch("/json/RutaDescrip.json");
+				
+				// Verifica si la respuesta es válida
                 if (!response.ok) {
+					// Si no es válida, muestra un mensaje de error en el elemento con ID 'descripcion'
                     document.getElementById("descripcion").textContent = "Descripción no disponible.";
                     return;
                 }
-
+				
+				// Si la respuesta es válida, parsea los datos JSON
                 const descripciones = await response.json();
+				
+				// Busca la descripción correspondiente a la ruta usando su ID
                 const ruta = descripciones.rutas.find(r => Number(r.id) === Number(rutaId));
+				
+				// Si se encuentra la descripción, la muestra; de lo contrario, muestra un mensaje por defecto
                 document.getElementById("descripcion").textContent = ruta ? ruta.descripcion : "Descripción no disponible.";
             } catch (error) {
                 document.getElementById("descripcion").textContent = "Error cargando la descripción.";
             }
         }
 
+		// Llama a la función para cargar la descripción cuando la página haya cargado
         cargarDescripcionRuta();
     </script>
 	
+	<!-- Script procesar datos distancia y duracion -->
 	<script th:src="@{/js/procesarDistanciaYDuracion.js}"></script>
 
-    <!-- Pie de página -->
+    <!-- Footer -->
     <div th:insert="~{fragmentos/footer :: footer}"></div>
 
     <!-- Bootstrap JS -->

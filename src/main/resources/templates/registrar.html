@@ -1,8 +1,9 @@
+<!-- FORMULARIO REGISTRO -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	 <title>Registrar</title>
+	 <title>Registrarse</title>
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,11 +14,15 @@
 	 <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-	<div th:insert="fragmentos/nav :: nav"></div>
+	<!-- Menú de navegación -->
+	<div th:insert="~{fragmentos/nav :: nav}"></div>
+	
+	<!-- Contenido principal -->
 	<div class="wrapper bg-white">
 	    <div class="h4 text-muted text-center pt-2">Registro</div>
 		<form class="pt-3" th:action="@{/registro}" th:object="${usuarioDTO}" method="post">
-		    <!-- Correo Electrónico -->
+			
+		    <!-- Campo Correo Electrónico -->
 		    <div class="form-group py-2">
 		        <div class="input-field">
 		            <span class="far fa-user p-2"></span>
@@ -26,7 +31,7 @@
 		        <div class="menER alert alert-danger" th:if="${correoError != null}" th:text="${correoError}"></div>
 		    </div>
 
-		    <!-- Nombre de Usuario -->
+		    <!-- Campo Nombre de Usuario -->
 		    <div class="form-group py-1 pb-2">
 		        <div class="input-field">
 		            <span class="fas fa-user p-2"></span>
@@ -35,7 +40,7 @@
 		        <div class="menER alert alert-danger" th:if="${nombreError != null}" th:text="${nombreError}"></div>
 		    </div>
 
-		    <!-- Contraseña -->
+		    <!-- Campo Contraseña -->
 		    <div class="form-group py-1 pb-2">
 		        <div class="input-field">
 		            <span class="fas fa-lock p-2"></span>
@@ -47,11 +52,15 @@
 		    <!-- Botón de registro -->
 		    <button class="btn btn-block text-center my-3" type="submit">Registrarme</button>
 		    <div class="text-center pt-3 text-muted">
+				<!-- Enlace a Iniciar Sesión -->
 		        ¿Ya tienes cuenta? <a href="/login">Iniciar Sesión</a>
 		    </div>
 		</form>
 	</div>
+	
+	<!-- Footer -->
 	<div th:insert="~{fragmentos/footer :: footer}"></div>
+	<!-- Bootstrap JS -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

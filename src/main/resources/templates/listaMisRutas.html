@@ -1,3 +1,4 @@
+<!-- LISTA MIS RUTAS -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -13,15 +14,16 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-	<!-- Incluir la barra de navegación -->
+	<!-- Menú de navegación -->
 	<div th:insert="~{fragmentos/nav :: nav}"></div>
+	
 	<!-- Contenedor principal -->
 	<div class="container my-5">
 	    <h1 class="text-center">Mis Rutas</h1>
 		<p class="text-secondary">
 		    En esta sección encontrarás todas tus rutas guardadas y listas para ser disfrutadas. 🚶‍♂️➡️ 
 		</p>
-	    <!-- Controles de Ordenación -->
+	    <!-- Filtro de ordenar -->
 	    <div class="d-flex justify-content-end my-3">
 	        <label for="ordenarRutas" class="me-2">Ordenar por:</label>
 	        <select id="ordenarRutas" class="form-select w-auto">
@@ -36,6 +38,7 @@
 	        <div class="row mt-4">
 	            <div class="col-md-6" th:each="rutaMap : ${rutasUsuario}" th:data-fecha-creacion="${rutaMap['ruta'].fechaCreacion}">
 	                <div class="route-card-wrapper">
+						
 	                    <!-- Ícono de papelera -->
 	                    <a th:href="@{/eliminarRutaUsuario(id=${rutaMap['ruta'].id})}" 
 	                       class="icon-trash position-absolute top-0 end-0 me-2 mt-2 text-danger" 
@@ -44,8 +47,8 @@
 	                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
 	                        </svg>
 	                    </a>
-
-	                    <!-- Enlace de toda la tarjeta -->
+						
+	                    <!-- Enlace de toda la tarjeta par ver el detalle-->
 	                    <a th:href="@{/detalleRuta/usuario/{id}(id=${rutaMap['ruta'].id})}" class="card route-card text-decoration-none">
 	                        <div class="route-image">
 	                            <img class="card-img-top" th:src="${rutaMap['imagen']}" alt="Imagen de la ruta" onerror="this.src='/img/ImgComunPi.png'">
@@ -69,7 +72,7 @@
 	                        </div>
 	                    </a>
 
-	                    <!-- Botón Comenzar -->
+	                    <!-- Botón Comenzar (realmente es enlace)-->
 	                    <div class="route-card-button">
 	                        <a th:href="@{/hacerRuta(id=${rutaMap['ruta'].id}, tipo=${rutaMap['ruta'].tipo})}" class="btnGeMR btn btn-primary w-100">Comenzar</a>
 	                    </div>
@@ -84,6 +87,8 @@
 	        <div class="row mt-4">
 	            <div class="col-md-6" th:each="rutaMap : ${rutasMisRutas}" th:data-fecha-creacion="${rutaMap['fecha']}">
 	                <div class="route-card-wrapper">
+						
+						<!-- Enlace de toda la tarjeta par ver el detalle-->
 	                    <a th:href="@{/detalleRuta/predeterminada/{id}(id=${rutaMap['ruta'].id}, origen='listaMisRutas')}" class="card route-card mb-4 text-decoration-none">
 	                        <div class="route-image">
 	                            <img class="card-img-top" th:src="${rutaMap['imagen']}" alt="Imagen de la ruta" onerror="this.src='/img/ImgComunPi.png'">
@@ -106,6 +111,8 @@
 	                            </div>
 	                        </div>
 	                    </a>
+						
+						<!-- Botón Comenzar (realmente es enlace)-->
 	                    <div class="route-card-button">
 	                        <a th:href="@{/hacerRuta(id=${rutaMap['ruta'].id}, tipo=${rutaMap['ruta'].tipo})}" class="btnGeMR btn btn-primary w-100">Comenzar</a>
 	                    </div>
@@ -114,34 +121,47 @@
 	        </div>
 	    </section>
 	</div>
+	
 	 <!--Footer-->
 	 <div th:insert="~{fragmentos/footer :: footer}"></div>
+	  <!-- Script procesar datos distancia y duracion -->
 	  <script th:src="@{/js/procesarDistanciaYDuracion.js}"></script>
+	  
 	  <script>
 	       document.addEventListener("DOMContentLoaded", () => {
+			// Seleccionar el elemento del menú desplegable para ordenar las rutas
 	           const ordenarSelect = document.getElementById("ordenarRutas");
+			   // Agregar un evento que se dispara cuando el usuario cambia la opción seleccionada
 	           ordenarSelect.addEventListener("change", () => {
+				// Obtener el valor seleccionado (recientes o antiguas)
 	               const order = ordenarSelect.value;
-	               // Seleccionar las filas de ambas secciones
+	                // Seleccionar las filas de ambas secciones: "Rutas Creadas" y "Rutas Guardadas"
 	               const secciones = [
 	                   document.querySelectorAll("#rutasCreadas .row .col-md-6"),
 	                   document.querySelectorAll("#rutasGuardadas .row .col-md-6")
 	               ];
+				   // Iterar sobre ambas secciones para aplicar el ordenamiento
 	               secciones.forEach((seccion) => {
-	                   // Convertir NodeList a Array para ordenar
+					// Convertir NodeList a Array para poder ordenar los elementos
 	                   const items = Array.from(seccion);
+					   // Ordenar los elementos en función de la fecha de creación
 	                   items.sort((a, b) => {
+						// Obtener las fechas de cada elemento a partir del atributo `data-fecha-creacion`
 	                       const fechaA = new Date(a.getAttribute("data-fecha-creacion"));
 	                       const fechaB = new Date(b.getAttribute("data-fecha-creacion"));
+						   // Comparar fechas dependiendo del orden seleccionado
+						   // Si se selecciona "recientes", ordenar de mayor a menor
+						   // Si se selecciona "antiguas", ordenar de menor a mayor
 	                       return order === "recientes" ? fechaB - fechaA : fechaA - fechaB;
 	                   });
-	                   // Reorganizar los elementos en el DOM
-	                   const parent = items[0].parentElement;
-	                   items.forEach(item => parent.appendChild(item));
+	                   // Reorganizar los elementos en el DOM según el nuevo orden
+	                   const parent = items[0].parentElement; // Obtener el contenedor padre
+	                   items.forEach(item => parent.appendChild(item)); // Reinsertar los elementos en el nuevo orden
 	               });
 	           });
 	       });
 	   </script>
+	   
 	 <!-- Bootstrap JS -->
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -1,39 +1,53 @@
+<!-- MENÚ DE NAVEGACIÓN-->
 <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-fluid">
+		<!-- Imagen Logo, es un enlace a la página de inicio (home) -->
         <a class="navbar-brand" href="/home">
             <img src="/img/LogoRutaCulturalTransparente.png" alt="Logo Ruta Cultural" class="navbar-logo">
         </a>
+		<!-- Botón "hamburguesa" para expandir/colapsar el menú en pantallas pequeñas -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
+					<!-- Enlace a la página de inicio (home) -->
                     <a class="nav-link active" href="/home">Inicio</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
+					<!-- Enlace a la lista de rutas predeterminadas -->
                     <a class="nav-link" href="/listaRutasPredeterminadas">Rutas</a>
                 </li>
+				
                 <!-- Mostrar "Mis Rutas" solo para usuarios autenticados -->
                 <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" href="/listaMisRutas">Mis Rutas</a>
                 </li>
+				
+				<!-- Enlace para crear rutas -->
 				<li class="nav-item">
 				    <a class="nav-link" href="/crearRutaUsuario">Crear Rutas</a>
 				</li>
+				
                 <!-- Mostrar "Rutas Realizadas" solo para usuarios autenticados -->
                 <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" href="/listaRutasRealizadas">Rutas Realizadas</a>
-                </li>            
-                <!-- Mostrar opciones según la autenticación -->
+                </li> 
+				           
+                <!-- Mostrar "Cerrar Sesión" solo a usuarios logueados -->
                 <li id="navLogOut" class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" href="/cerrarSesion">Cerrar Sesión</a>
                 </li>
+				
+				<!-- Mostrar "Iniciar Sesión" solo a usuarios no logueados -->
                 <li id="navLog" class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" href="/login">Iniciar Sesión</a>
                 </li>
+				
+				<!-- Mostrar "Registrarse" solo a usuarios no logueados -->
                 <li id="navReg" class="nav-item" th:unless="${#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link " href="/registrar">Registrarse</a>
                 </li>

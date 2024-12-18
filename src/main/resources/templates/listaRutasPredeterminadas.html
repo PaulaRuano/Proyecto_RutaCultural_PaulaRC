@@ -1,3 +1,4 @@
+<!-- LISTA RUTAS PREDETERMINADAS -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -13,8 +14,9 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-	<!-- Incluir la barra de navegación -->
-	 <div th:insert="fragmentos/nav :: nav"></div>
+	 <!-- Menú de navegación -->
+	 <div th:insert="~{fragmentos/nav :: nav}"></div>>
+	 
 	 <!-- Contenido principal -->
 	  <main class="container my-5">
 	    <h1 class="text-center">Rutas Predeterminadas</h1>
@@ -27,6 +29,7 @@
 		            <!-- Tarjeta -->
 					<a th:href="@{/detalleRuta/predeterminada/{id}(id=${rutaMap['ruta'].id}, origen='listaRutasPredeterminadas')}" class="card route-card mb-4 text-decoration-none">
 		                <div class="route-image">
+							<!-- Imagen Punto de Interés -->
 		                    <img class="card-img-top" alt="Imagen de la ruta" th:src="${rutaMap['imagen']}" onerror="this.src='/img/ImgComunPi.png'">
 		                </div>
 		                <div class="route-details">
@@ -42,12 +45,12 @@
 								</div>
 		                        <div class="data-item">
 		                            <strong>Localidad:</strong>
-		                            <span th:text="${rutaMap['ruta'].municipio}">La Cistérniga</span>
+		                            <span th:text="${rutaMap['ruta'].municipio}">Localidad</span>
 		                        </div>
 		                    </div>
 		                </div>
 		            </a>
-		            <!-- Botón fuera del enlace pero visualmente unido -->
+		            <!-- Botón Guardar en Mis Rutas -->
 		            <form th:action="@{/guardarEnMisRutas}" method="POST" class="route-card-button">
 		                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 		                <input type="hidden" name="rutaId" th:value="${rutaMap['ruta'].id}" />
@@ -57,8 +60,11 @@
 		    </div>
 		</div>
 	  </main>
+	  
+	  <!-- Footer -->
 	  <div th:insert="~{fragmentos/footer :: footer}"></div>
 	  
+	  <!-- Script procesar datos distancia y duracion -->
 	  <script th:src="@{/js/procesarDistanciaYDuracion.js}"></script>
 	 
 	 <!-- Bootstrap JS -->

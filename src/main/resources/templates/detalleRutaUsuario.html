@@ -1,8 +1,9 @@
+<!-- VISTA DETALLE RUTA USUARIO -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio</title>
+    <title>Detalle Ruta Usuario</title>
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,11 +14,12 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-    <!-- Barra de navegación -->
+    <!-- Menú de navegación -->
     <div th:insert="~{fragmentos/nav :: nav}"></div>
 
 	<!-- Contenido principal -->
-	   <main class="container my-5">
+	<main class="container my-5">
+		<!-- Enlace volver atrás -->
 	       <a th:href="@{/listaMisRutas}" class="back-button">
 	           &larr; Volver a la lista
 	       </a>
@@ -50,10 +52,10 @@
 	       </section>
 	   </main>
 
-	   <!-- Formatear duración y distancia -->
+	<!-- Script procesar datos distancia y duracion -->
 	<script th:src="@{/js/procesarDistanciaYDuracion.js}"></script>
 
-    <!-- Pie de página -->
+    <!-- Footer -->
     <div th:insert="~{fragmentos/footer :: footer}"></div>
 
     <!-- Bootstrap JS -->

@@ -1,3 +1,4 @@
+<!-- HOME/INICIO -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
@@ -13,52 +14,59 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">	
 </head>
 <body>
-	<!-- Incluir la barra de navegación -->
+	<!-- Menú de navegación -->
 	<div th:insert="~{fragmentos/nav :: nav}"></div>
+	
+	<!-- Contenido principal -->
 	 <main>
+	 <!-- Hero (imagen) -->
 	 <div class="homeHero">
 		<div class="px-4 py-5 my-5 text-center">		  
 		    <h1 class="display-5 fw-bold">Ruta Cultural</h1>
 			<h2 class="display-5 fw-bold ">Castilla y León</h2>		    		   	    		  
 		  </div>
 	 </div>	
+	 
+	 <!-- Sección 0 - Explora Castolla... -->
 	 <div class="pcontainer my-5">
-	 	         <div class="card border-0">
-	 	             <div class="pExplora card-body">
-	 	                 <h2 class="tpExplora card-title text-center mb-4">¡Explora Castilla y León a tu Ritmo!</h2>
-	 	                 <p class="card-text text-justify">
+	 	  <div class="card border-0">
+	 	       <div class="pExplora card-body">
+	 	            <h2 class="tpExplora card-title text-center mb-4">¡Explora Castilla y León a tu Ritmo!</h2>
+	 	            <p class="card-text text-justify">
 							Descubre los tesoros culturales de esta increíble región de forma única y personalizada. 
 							Diseña tus propias rutas, escucha fascinantes historias en cada lugar y vive una experiencia 
 							cultural sin igual, todo al alcance de tu mano. Olvídate de buscar guías; con nosotros, tienes todo en un solo clic.
-						</p>
-						<p class="card-text text-justify">
+					</p>
+					<p class="card-text text-justify">
 							¿Listo para tu próxima aventura?
-						</p>	
-						<div class="text-center mt-4">
-						               <!-- Mostrar botón basado en autenticación -->
-						               <th:block th:if="${!isAuthenticated}">
-						                   <a href="/login" class="bIC btn btn-primary">Iniciar Sesión</a>
-						               </th:block>
-						               <th:block th:if="${isAuthenticated}">
-						                   <a href="/listaMisRutas" class="btn bMR">Mis Rutas</a>
-						               </th:block>
-						           </div>					
-	 	             </div>
-	 	         </div>
-	 	     </div>	
+					</p>	
+					<div class="text-center mt-4">
+						<!-- Mostrar botón basado en autenticación -->
+						<th:block th:if="${!isAuthenticated}">
+						    <a href="/login" class="bIC btn btn-primary">Iniciar Sesión</a>
+						</th:block>
+						<th:block th:if="${isAuthenticated}">
+						    <a href="/listaMisRutas" class="btn bMR">Mis Rutas</a>
+						</th:block>
+					</div>					
+	 	       </div>
+	 	  </div>
+	</div>
+	
+	<!-- Sección 1 - Crea tus...(fondo morado)-->
 	<div class="sec1">		 			 			 	
 	 <div class=" container my-5 sec1">
 	    <!-- Primera sección: Imagen izquierda, texto derecha -->
 	    <div class="row mb-5 align-items-center">
 	      <div class="col-md-6 image-section">
 	        <img src="/img/HomeSec1img2.png" alt="Imagen izquierda">
-	      </div>
-		 	 
+	      </div>		 	 
 	      <div class="col-md-6 content-section">
 	        <h2 class="ts1 fw-bold">Crea tus propias rutas</h2>
 	        <p>Selecciona los puntos de interés que más te atraigan como museos, galerías, iglesias y muchos más para que formen parte
 				de tu propia ruta personalizada. Tu decides cuando comenzar, que distancia y cuánto quieres que dure.
 			</p>
+			<!-- enlace a la vista de Crear Rutas -->
 	        <a href="/crearRutaUsuario" class="as1 btn btn-primary">Crear Ruta</a>
 	      </div>
 	    </div>
@@ -74,6 +82,7 @@
 	  </div>
 	  </div>
 	  
+	  <!-- Sección 2 - Google Maps -->
 	  <div class="pcontainer my-5">
 	    <div class="card border-0">
 	      <div class="pExplora card-body text-center">
@@ -87,13 +96,14 @@
 	      </div>
 	    </div>
 	  </div>
-
-			 <div class="container my-5 ">
-			    <h1 class="tPE text-center mb-4">¿Por Qué Elegirnos?</h1>
-			    <!-- Contenedor de las sub-secciones -->
-			    <div class="features-container">
-			      <!-- Sub-sección 1 -->
-			      <div class="feature-card">
+	  
+	  <!-- Sección 3 - ¿Por qué... -->
+	  <div class="container my-5 ">
+		  <h1 class="tPE text-center mb-4">¿Por Qué Elegirnos?</h1>
+		  <!-- Contenedor de las sub-secciones -->
+		  <div class="features-container">
+			   <!-- Sub-sección 1 -->
+			   <div class="feature-card">
 			        <div>
 			          <h3>Sin Guías, Sin Estrés</h3>
 			          <p>Libérate de buscar información o contratar guías si prefieres viajar a tu manera.</p>
@@ -101,10 +111,10 @@
 			        <div class="image-container mt-4">
 			          <img src="/img/sub1.png" alt="Sin Guías, Sin Estrés">
 			        </div>
-			      </div>
+			    </div>
 
-			      <!-- Sub-sección 2 -->
-			      <div class="feature-card">
+			    <!-- Sub-sección 2 -->
+			    <div class="feature-card">
 			        <div>
 			          <h3>Fácil y Rápido</h3>
 			          <p>Todo lo que necesitas para explorar Castilla y León está en la palma de tu mano.</p>
@@ -112,10 +122,10 @@
 			        <div class="image-container mt-4">
 			          <img src="/img/sub2.png" alt="Fácil y Rápido">
 			        </div>
-			      </div>
+			    </div>
 
-			      <!-- Sub-sección 3 -->
-			      <div class="feature-card">
+			    <!-- Sub-sección 3 -->
+			    <div class="feature-card">
 			        <div>
 			          <h3>Contenido Personalizado</h3>
 			          <p>Diseña tu experiencia de viaje según tus intereses y horarios.</p>
@@ -123,10 +133,12 @@
 			        <div class="image-container mt-4">
 			          <img src="/img/sub3.png" alt="Contenido Personalizado">
 			        </div>
-			      </div>
 			    </div>
-			  </div>
+		   </div>
+	    </div>
 	 </main>
+	 
+	 <!-- Footer -->
 	 <div th:insert="~{fragmentos/footer :: footer}"></div>
 	 <!-- Bootstrap JS -->
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

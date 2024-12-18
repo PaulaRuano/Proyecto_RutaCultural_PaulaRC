@@ -1,3 +1,4 @@
+<!-- VISTA REALIZAR RUTA -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,7 +15,10 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
+	<!-- Menú de navegación -->
     <div th:insert="~{fragmentos/nav :: nav}"></div>
+	
+	<!-- Contenido principal -->
     <div class="container my-4">
         <h1 class="text-center">Hacer Ruta</h1>
 
@@ -42,14 +46,20 @@
                      alt="Imagen del punto"
                      class="img-fluid mb-3">
             </div>
+			
+			<!-- Botón para reproducir el audio -->
             <div class="text-center">
                 <button id="btnReproducirAudio" class="btn btn-primary">
                     <i class="bi bi-play-circle"></i> Reproducir Audio
                 </button>
             </div>
+			
             <p class="mt-3" id="descripcionPunto">Descripción del punto de interés.</p>
 			<div class="text-center mt-4">
+				
+				<!-- Botón Ir al Siguiente Punto -->
 			    <button class="btn btn-success" id="btnSiguientePunto">Ir al Siguiente Punto</button>
+				
 				<form id="guardarRutaForm" action="/rutasRealizadas/guardar" method="POST" style="display: none;">
 				    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 				   	<input type="hidden" name="rutaId" id="rutaIdInput" th:value="${ruta.id}" />
@@ -57,73 +67,73 @@
 				    <input type="hidden" name="fecha" id="fechaInput" />
 				    <input type="hidden" name="tiempo" id="tiempoInput" />
 				</form>
+				<!-- Botón Terminar Ruta -->
 				<button class="btn btn-danger" id="btnTerminarRuta" style="display: none;">Terminar Ruta</button>
 			</div>
         </div>
     </div>
 	<script>
-	    let map;
-	    let directionsService;
-	    let directionsRenderer;
-	    let puntos = /*[[${puntos}]]*/ []; // Cargados desde el backend
-	    let descripciones = []; // Cargadas desde el JSON
-	    let puntoActualIndex = 0; // Índice del punto actual
-	    let audioActual; // Controlador del audio actual
-	    let tiempoInicio; // Tiempo de inicio de la ruta
+	    let map; // Mapa de Google Maps
+	    let directionsService; // Servicio de direcciones de Google Maps
+	    let directionsRenderer; // Renderer para mostrar rutas en el mapa
+	    let puntos = /*[[${puntos}]]*/ []; // Puntos de la ruta cargados desde el backend
+	    let descripciones = []; // Descripciones cargadas desde un archivo JSON
+	    let puntoActualIndex = 0; // Índice del punto actualmente mostrado
+	    let audioActual; // Controlador del audio asociado al punto actual
+	    let tiempoInicio; // Tiempo en el que se inicia la ruta
 
-	    // Función global para Google Maps
+	    // Función global que se ejecuta cuando Google Maps ha sido cargado
 	    window.initMap = function () {
-	        directionsService = new google.maps.DirectionsService();
-	        directionsRenderer = new google.maps.DirectionsRenderer();
+	        directionsService = new google.maps.DirectionsService(); // Inicializa el servicio de direcciones
+	        directionsRenderer = new google.maps.DirectionsRenderer();  // Inicializa el renderer para mostrar la ruta
 
 	        map = new google.maps.Map(document.getElementById("map"), {
-	            center: { lat: 40.416775, lng: -3.703790 },
-	            zoom: 10,
+	            center: { lat: 40.416775, lng: -3.703790 }, // Centro inicial (Madrid)
+	            zoom: 10, // Nivel de zoom inicial
 	        });
 
-	        directionsRenderer.setMap(map);
-
+	        directionsRenderer.setMap(map); // Vincula el renderer con el mapa
+			
+			// Convierte los elementos de la línea de tiempo a objetos con datos relevantes
 	        puntos = Array.from(document.querySelectorAll(".timeline .point")).map((point) => ({
 	            id: parseInt(point.getAttribute("data-id")),
 	            nombreOrganismo: point.querySelector("span").textContent.trim(),
 	            lat: parseFloat(point.getAttribute("data-lat")),
 	            lng: parseFloat(point.getAttribute("data-lng")),
 	        }));
-
-	        console.log("Puntos cargados:", puntos);
-	        calculateRoute(puntos);
-
-	        // Registrar el inicio de la ruta
-	        tiempoInicio = Date.now();
-
-	        // Cargar descripciones desde el JSON
-	        cargarDescripcionesJSON();
+	       
+	        calculateRoute(puntos); // Calcula la ruta con los puntos cargados
+	  
+	        tiempoInicio = Date.now(); // Marca el inicio de la ruta
+	        cargarDescripcionesJSON(); // Carga las descripciones de los puntos desde un JSON
 	    };
-
+		
+		// Calcula la ruta entre los puntos seleccionados
 	    function calculateRoute(puntos) {
-	        if (puntos.length < 2) return;
+	        if (puntos.length < 2) return; // Necesita al menos dos puntos para calcular una ruta
 
 	        const waypoints = puntos.slice(1, -1).map((point) => ({
 	            location: new google.maps.LatLng(point.lat, point.lng),
-	            stopover: true,
+	            stopover: true, // Marca cada punto intermedio como una parada
 	        }));
 
 	        const request = {
-	            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng),
+	            origin: new google.maps.LatLng(puntos[0].lat, puntos[0].lng), // Punto inicial
 	            destination: new google.maps.LatLng(puntos[puntos.length - 1].lat, puntos[puntos.length - 1].lng),
 	            waypoints,
-	            travelMode: google.maps.TravelMode.WALKING, // A pie
+	            travelMode: google.maps.TravelMode.WALKING, // Modo de transporte (caminando)
 	        };
 
 	        directionsService.route(request, (result, status) => {
 	            if (status === google.maps.DirectionsStatus.OK) {
-	                directionsRenderer.setDirections(result);
+	                directionsRenderer.setDirections(result); // Muestra la ruta en el mapa
 	            } else {
 	                console.error("Error al calcular la ruta:", status);
 	            }
 	        });
 	    }
-
+		
+		// Cargar las descripciones de los puntos desde un archivo JSON
 	    async function cargarDescripcionesJSON() {
 	        try {
 	            const response = await fetch("/json/PunIntDescrip.json");
@@ -134,22 +144,21 @@
 	            descripciones = await response.json();
 	            console.log("Descripciones cargadas:", descripciones);
 
-	            mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto tras cargar las descripciones
+	            mostrarPuntoActual(puntoActualIndex); // Muestra el primer punto al cargar las descripciones
 	        } catch (error) {
 	            console.error("Error cargando descripciones:", error);
 	        }
 	    }
-
+		
+		// Actualiza la información del punto actual en la interfaz
 	    function mostrarPuntoActual(index) {
 	        const punto = puntos[index];
 	        if (!punto) {
 	            console.error(`Punto no encontrado en el índice ${index}`);
 	            return;
-	        }
+	        }	
 
-	        console.log(`Mostrando punto actual:`, punto);
-
-	        // Actualizar la información del punto actual
+	        // Actualiza el nombre, imagen y descripción del punto actual
 	        const descripcion = descripciones.find((desc) => desc.id === punto.id)?.descripcion || "Descripción del punto de interés";
 	        document.getElementById("nombrePunto").textContent = punto.nombreOrganismo;
 	        document.getElementById("imagenPunto").src = `/img/puntosInteres/${punto.id}.jpg`;
@@ -158,13 +167,13 @@
 	        };
 	        document.getElementById("descripcionPunto").textContent = descripcion;
 
-	        // Configuración del audio
+	       // Configurar el audio asociado al punto
 	        if (audioActual) {
 	            audioActual.pause();
 	        }
 	        audioActual = new Audio(`/audio/${punto.id}.mp3`);
 	        audioActual.onerror = () => {
-	            audioActual.src = "/audio/Comun.mp3";
+	            audioActual.src = "/audio/Comun.mp3"; // Audio genérico 
 	        };
 
 	        document.getElementById("btnReproducirAudio").onclick = () => {
@@ -174,9 +183,9 @@
 	            }
 	        };
 
-	        // Configuración de los botones
-	        const btnSiguientePunto = document.getElementById("btnSiguientePunto");
-	        const btnTerminarRuta = document.getElementById("btnTerminarRuta");
+	        // Configura los botones según el punto actual
+	        const btnSiguientePunto = document.getElementById("btnSiguientePunto"); // Oculta el botón de "Siguiente Punto"
+	        const btnTerminarRuta = document.getElementById("btnTerminarRuta"); // Muestra el botón de "Terminar Ruta"
 
 	        if (index === puntos.length - 1) {
 	            btnSiguientePunto.style.display = "none";
@@ -186,21 +195,19 @@
 	            btnTerminarRuta.style.display = "none";
 	        }
 	    }
-
+		
+		// Eventos al cargar la página
 	    document.addEventListener("DOMContentLoaded", () => {
+			// Configurar los botones de la interfaz
 	        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 	        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
 	        // Botón "Terminar Ruta"
 	        document.getElementById("btnTerminarRuta").onclick = () => {
 				const rutaId = document.getElementById("rutaIdInput").value;
-				   const fecha = new Date().toISOString().split('T')[0];
+				   const fecha = new Date().toISOString().split('T')[0]; // Fecha en formato ISO
 				   const tiempoFinal = Date.now();
-				   const duracion = Math.floor((tiempoFinal - tiempoInicio) / 1000);
-
-				   console.log("Ruta ID:", rutaId);
-				   console.log("Fecha:", fecha);
-				   console.log("Duración:", duracion);
+				   const duracion = Math.floor((tiempoFinal - tiempoInicio) / 1000); // Duración en segundos				 
 
 				   if (!rutaId) {
 				       console.error("Error: 'rutaId' es null o vacío.");
@@ -210,23 +217,24 @@
 				   document.getElementById("fechaInput").value = fecha;
 				   document.getElementById("tiempoInput").value = duracion;
 
-				   document.getElementById("guardarRutaForm").submit();
+				   document.getElementById("guardarRutaForm").submit(); // Envía el formulario para guardar la ruta
 	        };
 
 	        // Botón "Ir al Siguiente Punto"
 	        document.getElementById("btnSiguientePunto").onclick = () => {
 	            if (puntoActualIndex < puntos.length - 1) {
-	                puntoActualIndex++;
-	                mostrarPuntoActual(puntoActualIndex);
+	                puntoActualIndex++; // Avanza al siguiente punto de la ruta
+	                mostrarPuntoActual(puntoActualIndex); // Muestra la información del siguiente punto en la interfaz
 	            }
 	        };
+			
 			function actualizarPuntoActivo(index) {
 			    const puntos = document.querySelectorAll('.timeline .point');
 
 			    // Eliminar la clase "active" de todos los puntos
 			    puntos.forEach((punto) => {
-			        punto.classList.remove('active');
-			        punto.classList.add('pending');
+			        punto.classList.remove('active'); // Quitar la clase activa
+			        punto.classList.add('pending'); // Marcar el punto como pendiente
 			    });
 
 			    // Agregar la clase "active" al punto actual
@@ -238,19 +246,21 @@
 
 			document.getElementById("btnSiguientePunto").onclick = () => {
 			    if (puntoActualIndex < puntos.length - 1) {
-			        puntoActualIndex++;
-			        mostrarPuntoActual(puntoActualIndex);
-			        actualizarPuntoActivo(puntoActualIndex); // Actualizar dinámicamente el punto activo
+			        puntoActualIndex++; // Avanzar al siguiente punto
+			        mostrarPuntoActual(puntoActualIndex); // Mostrar la información del siguiente punto
+			        actualizarPuntoActivo(puntoActualIndex); // Marcar el nuevo punto como activo
 			    }
 			};
 
 			actualizarPuntoActivo(0); // Inicializar el primer punto como activo
-	        // Inicializar los puntos y mostrar el primero
-	        cargarDescripcionesJSON();
+	       
+	        cargarDescripcionesJSON(); // Cargar las descripciones al iniciar la página
 	        mostrarPuntoActual(puntoActualIndex); // Mostrar el primer punto al cargar la página
 	    });
 	</script>
+	<!-- Footer -->
 	<div th:insert="~{fragmentos/footer :: footer}"></div>
+	<!-- Bootstrap JS -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLMpyfvOmoEXcXj0TS7MwYk39OAz2c530&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>

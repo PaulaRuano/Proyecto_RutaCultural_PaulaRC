@@ -1,80 +1,55 @@
 package proyecto.servicio;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import proyecto.modelo.dao.RutaPredeterminadaDAO;
 import proyecto.modelo.dao.RutaRealizadaDAO;
-import proyecto.modelo.dao.RutaUsuarioDAO;
-import proyecto.modelo.dto.RutaDTO;
-import proyecto.modelo.dto.RutaPredeterminadaDTO;
 import proyecto.modelo.dto.RutaRealizadaDTO;
-import proyecto.modelo.dto.RutaUsuarioDTO;
 
+/**
+ * Servicio para gestionar la lógica relacionada con las rutas realizadas por los usuarios
+ * 
+ * @author Paula Ruano
+ */
 @Service
 public class RutaRealizadaServicio {
-	  private final RutaRealizadaDAO rutaRealizadaDAO;
-	    private final RutaUsuarioDAO rutaUsuarioDAO;
-	    private final RutaPredeterminadaDAO rutaPredeterminadaDAO;
+	// Variables locales de la clase
+	private final RutaRealizadaDAO rutaRealizadaDAO;	
+	
+	// Constructor de la clase
+	@Autowired
+	public RutaRealizadaServicio(RutaRealizadaDAO rutaRealizadaDAO) {
+		this.rutaRealizadaDAO = rutaRealizadaDAO;	
+	}
 
-	    @Autowired
-	    public RutaRealizadaServicio(RutaRealizadaDAO rutaRealizadaDAO, 
-	                                 RutaUsuarioDAO rutaUsuarioDAO,
-	                                 RutaPredeterminadaDAO rutaPredeterminadaDAO) {
-	        this.rutaRealizadaDAO = rutaRealizadaDAO;
-	        this.rutaUsuarioDAO = rutaUsuarioDAO;
-	        this.rutaPredeterminadaDAO = rutaPredeterminadaDAO;
-	    }
-
-	    /**
-	     * Crea y guarda una nueva ruta realizada en la base de datos.
-	     *
-	     * @param rutaRealizadaDTO el DTO de la ruta realizada a guardar
-	     * @return la ruta realizada guardada en la base de datos
-	     */
-
-	    @Transactional
-	    public void crearRutaRealizada(RutaRealizadaDTO rutaRealizada) {	    	
-	        rutaRealizadaDAO.save(rutaRealizada); // Guardar directamente el objeto recibido
-	    }
-
-	    public List<Map<String, Object>> obtenerRutasConTitulos() {
-	        List<RutaRealizadaDTO> rutasRealizadas = rutaRealizadaDAO.findAll();
-
-	        return rutasRealizadas.stream().map(rutaRealizada -> {
-	            Map<String, Object> rutaMap = new HashMap<>();
-	            RutaDTO ruta = rutaRealizada.getRuta();
-
-	            String titulo = null;
-	            if (ruta instanceof RutaUsuarioDTO) {
-	                titulo = ((RutaUsuarioDTO) ruta).getNombre();
-	            } else if (ruta instanceof RutaPredeterminadaDTO) {
-	                titulo = ((RutaPredeterminadaDTO) ruta).getNombre();
-	            } else {
-	                titulo = "Título desconocido";
-	            }
-
-	            rutaMap.put("titulo", titulo);
-	            rutaMap.put("fecha", rutaRealizada.getFecha());
-	            rutaMap.put("tiempo", rutaRealizada.getTiempo());
-
-	            return rutaMap;
-	        }).toList();
-	    }
-	    
-
-	    public List<RutaRealizadaDTO> obtenerRutasRealizadasPorUsuario(int usuarioId) {
-	        return rutaRealizadaDAO.findAll().stream()
-	                .filter(ruta -> ruta.getUsuario().getId() == usuarioId)
-	                .toList();
-	    }
-
+	 /**
+     * Crea y guarda una nueva ruta realizada en la base de datos
+     * 
+     * @param rutaRealizada El objeto RutaRealizadaDTO a guardar
+     * 
+     * @see RutaRealizadaControlador
+     */
+	@Transactional
+	public void crearRutaRealizada(RutaRealizadaDTO rutaRealizada) {
+		 // Guardar la ruta realizada en la base de datos
+		rutaRealizadaDAO.save(rutaRealizada);
+	}
+	
+	 /**
+     * Obtiene una lista de rutas realizadas por un usuario específico
+     * 
+     * @param usuarioId ID del usuario para filtrar las rutas realizadas
+     * @return Lista de rutas realizadas asociadas al usuario
+     * 
+     * @see RutaRealizadaControlador
+     */	
+	public List<RutaRealizadaDTO> obtenerRutasRealizadasPorUsuario(int usuarioId) {
+		// Filtrar las rutas realizadas por el ID del usuario
+		return rutaRealizadaDAO.findAll().stream()
+				.filter(ruta -> ruta.getUsuario().getId() == usuarioId)
+				.toList();
+	}
 }
