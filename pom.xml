@@ -137,11 +137,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
+                 <configuration>
+                <source>20</source>
+                <target>20</target>
+                <release>20</release>
+            </configuration>
             </plugin>      
         </plugins>
     </build>
