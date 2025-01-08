@@ -1,0 +1,1 @@
+web: java -jar target/ProyectoDAW_Paula_Ruano_Castillo-0.0.1-SNAPSHOT.war
