@@ -1,1 +1,0 @@
-web: java -Dserver.port=8000 -jar target/ProyectoDAW_Paula_Ruano_Castillo.war
